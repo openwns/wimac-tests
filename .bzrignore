@@ -1,2 +1,6 @@
 .arch-ids
 {arch}
+configBase/output
+configSubframeTDD/output_*
+configSubframeTDD/stderr.log
+configSubframeTDD/stdout.log
