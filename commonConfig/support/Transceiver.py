@@ -45,13 +45,13 @@ class Transceiver(Sealed):
         self.receiver['AP'] = OFDMAReceiver( propagation = self.propagation,
                                              propagationCharacteristicName = "AP",
                                              receiverNoiseFigure = _config.parametersSystem.noiseFigureAP,
-                                             FTFadingStrategy = NoFTFading())
+                                             FTFadingStrategy = FTFadingOff())
         self.receiver['AP'].logger.enabled = False
 
         self.receiver['FRS'] = OFDMAReceiver( propagation = self.propagation,
                                               propagationCharacteristicName = "FRS",
                                               receiverNoiseFigure = _config.parametersSystem.noiseFigureFRS,
-                                              FTFadingStrategy = NoFTFading())
+                                              FTFadingStrategy = FTFadingOff())
         self.receiver['FRS'].logger.enabled = False
 
 
@@ -59,7 +59,7 @@ class Transceiver(Sealed):
         self.receiver['UT'] = OFDMAReceiver( propagation = self.propagation,
                                              propagationCharacteristicName = "UT",
                                              receiverNoiseFigure = _config.parametersSystem.noiseFigureUT,
-                                             FTFadingStrategy =NoFTFading())
+                                             FTFadingStrategy = FTFadingOff())
         self.receiver['UT'].logger.enabled = False
 
 
