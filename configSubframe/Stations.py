@@ -101,7 +101,7 @@ class BaseStation(Layer2):
         self.dlscheduler.connect(self.frameBuilder)
         self.ulscheduler.connect(self.frameBuilder)
         self.frameBuilder.connect(self.phyUser)
-          
+
     def setupCompoundSwitch(self):
         self.compoundSwitch.onDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
         self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
@@ -322,13 +322,13 @@ class RelayStation(Layer2):
     config = None
     mainFrameLength = None
     subframeOffset = None
-    
+
     def __init__(self, node, config, stationID):
         super(RelayStation, self).__init__(node, "RS", config)
         self.upperconvergence = dll.UpperConvergence.No()
         self.stationType = "FRS"
         self.config = config
-        
+
         self.setStationID(stationID)
         self.relayMapper = wimac.Relay.RSRelayMapper()
         self.framehead = wimac.FrameBuilder.FrameHeadCollector('frameBuilder')
@@ -340,7 +340,7 @@ class RelayStation(Layer2):
         self.dlscheduler.txScheduler = wimac.Scheduler.Scheduler(
             'frameBuilder',
             config.parametersPhy.symbolDuration,
-            strategy = wns.Scheduler.ProportionalFair(historyWeight = 1.0,
+            strategy = wns.Scheduler.ProportionalFair(historyWeight = 0.99,
                                                       maxBursts = config.maxBursts),
             freqChannels =  config.parametersPhy.subchannels,
             maxBeams = config.maxBeams,
@@ -352,12 +352,12 @@ class RelayStation(Layer2):
             callback = wimac.Scheduler.DLCallback( beamforming = config.beamforming )
             )
         self.dlscheduler.rxScheduler = wimac.FrameBuilder.SSDLScheduler('frameBuilder', 'dlmapcollector')
-        
+
         self.ulscheduler = wimac.FrameBuilder.DataCollector('frameBuilder')
         self.ulscheduler.rxScheduler = wimac.Scheduler.Scheduler(
             'frameBuilder',
             config.parametersPhy.symbolDuration,
-            strategy = wns.Scheduler.ProportionalFairUL(historyWeight = 1.0,
+            strategy = wns.Scheduler.ProportionalFairUL(historyWeight = 0.99,
                                                         maxBursts = config.maxBursts),
             freqChannels =  config.parametersPhy.subchannels,
             maxBeams = config.maxBeams,
@@ -402,7 +402,7 @@ class RelayStation(Layer2):
 
         self.frameBuilder.config.timingControl.activations = \
             destination.getFrameActivationsForAssociatedStations() + self.frameBuilder.config.timingControl.activations
-        
+
     def connect(self):
         # Connections Controlplane
 
@@ -679,7 +679,7 @@ class SubscriberStation(Layer2):
         self.stationType = "UT"
         self.relayMapper = wimac.Relay.SSRelayMapper()
         self.framehead = wimac.FrameBuilder.FrameHeadCollector('frameBuilder')
-        
+
 
         # frame elements
         self.dlmapcollector = wimac.FrameBuilder.DLMapCollector('frameBuilder', None)
@@ -740,4 +740,3 @@ class SubscriberStation(Layer2):
 	self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
 
 
-        
