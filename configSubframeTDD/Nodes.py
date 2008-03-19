@@ -5,7 +5,6 @@ import constanze.Constanze
 import rise.Mobility
 import ip.Component
 #import applications
-import udp.Node
 
 from ofdmaphy.Station import OFDMAStation, OFDMAComponent
 
@@ -174,110 +173,6 @@ class BaseStation(wns.Node.Node):
                                                 mobility = rise.Mobility.No(wns.Position()))
 
 
-
-class SubscriberStationTLAppl(wns.Node.Node):
-    phy = None
-    dll = None
-    nl  = None
-    tl = None
-    load = None
-    mobility = None
-
-    def __init__(self, _id, _config, _qos = "UGS"):
-        super(SubscriberStationTLAppl, self).__init__("UT"+str(_id))
-        transceiver = Transceiver(_config)
-
-        #self.phy = None
-        # create the WIMAX DLL
-        self.dll = Stations.SubscriberStation(self, _config)#, ring = 2)
-        self.dll.setStationID(_id)
-        phyStation = OFDMAStation([transceiver.receiver['UT']], [transceiver.transmitter['UT']],
-                                  noOfAntenna = _config.parametersSystem.numberOfAntennaUTRxTx,
-                                  arrayLayout = _config.arrayLayout)
-        phyStation.txFrequency = ParametersSystem.centerFrequency
-        phyStation.rxFrequency = ParametersSystem.centerFrequency
-        phyStation.txPower = ParametersSystem.txPowerUT
-        phyStation.numberOfSubCarrier = ParametersOFDMA.makeshiftSubCarriers
-        phyStation.bandwidth =  ParametersOFDMA.makeshiftBandwidthChannelSystem
-        phyStation.systemManagerName = 'ofdma'
-        self.phy = OFDMAComponent(self, "phy", phyStation)
-        self.dll.setPhyDataTransmission(self.phy.dataTransmission)
-        self.dll.setPhyNotification(self.phy.notification)
-        # create Network Layer and Loadgen
-        domainName = "SS" + str(_id) + ".wimax.wns.org"
-        self.nl = ip.Component.IPv4Component(self, domainName + ".ip", domainName)
-        self.nl.addDLL(_name = "wimax",
-                       # Where to get IP Adresses
-                       _addressResolver = ip.AddressResolver.VirtualDHCPResolver("WIMAXRAN"),
-                       # Name of ARP zone
-                       _arpZone = "WIMAXRAN",
-                       # We cannot deliver locally to other UTs without going to the gateway
-                       _pointToPoint = True,
-                       _dllDataTransmission = self.dll.dataTransmission,
-                       _dllNotification = self.dll.notification)
-
-        self.nl.addRoute("0.0.0.0", "0.0.0.0", "192.168.254.254", "wimax")
-
-        self.tl = udp.Node.UDPComponent(self, "UDP."+str(_id), self.nl.dataTransmission, self.nl.notification);
-
-        self.load = applications.Applications.Client(self, "ClientAppls", None, self.tl.connectionService)
-        #self.load = constanze.Node.ConstanzeComponent(self, "constanze")
-        self.mobility = rise.Mobility.Component(node = self, name = "mobility UT"+str(_id), mobility = _config.riseMobility)
-
-
-
-class RemoteStationTLAppl(wns.Node.Node):
-    phy = None
-    dll = None
-    nl  = None
-    tl = None
-    load = None
-    mobility = None
-
-    def __init__(self, _id, _config):
-        super(RemoteStationTLAppl, self).__init__("UT"+str(_id))
-        transceiver = Transceiver(_config)
-
-        #self.phy = None
-        # create the WIMAX DLL
-        self.dll = Stations.RemoteStation(self, _config)#, ring = 4)
-        self.dll.setStationID(_id)
-        self.dll.setSubframeOffset()
-        phyStation = OFDMAStation([transceiver.receiver['UT']], [transceiver.transmitter['UT']],
-                                  noOfAntenna = _config.parametersSystem.numberOfAntennaUTRxTx,
-                                  arrayLayout = _config.arrayLayout)
-        phyStation.txFrequency = ParametersSystem.centerFrequency
-        phyStation.rxFrequency = ParametersSystem.centerFrequency
-        phyStation.txPower = ParametersSystem.txPowerUT
-        phyStation.numberOfSubCarrier = ParametersOFDMA.makeshiftSubCarriers
-        phyStation.bandwidth =  ParametersOFDMA.makeshiftBandwidthChannelSystem
-        phyStation.systemManagerName = 'ofdma'
-        self.phy = OFDMAComponent(self, "phy", phyStation)
-        self.dll.setPhyDataTransmission(self.phy.dataTransmission)
-        self.dll.setPhyNotification(self.phy.notification)
-        # create Network Layer and Loadgen
-        domainName = "RS" + str(_id) + ".wimax.wns.org"
-        self.nl = ip.Component.IPv4Component(self, domainName + ".ip", domainName)
-        self.nl.addDLL(_name = "wimax",
-                       # Where to get IP Adresses
-                       _addressResolver = ip.AddressResolver.VirtualDHCPResolver("WIMAXRAN"),
-                       # Name of ARP zone
-                       _arpZone = "WIMAXRAN",
-                       # We cannot deliver locally to other UTs without going to the gateway
-                       _pointToPoint = True,
-                       _dllDataTransmission = self.dll.dataTransmission,
-                       _dllNotification = self.dll.notification)
-
-        self.nl.addRoute("0.0.0.0", "0.0.0.0", "192.168.254.254", "wimax")
-
-        self.tl = udp.Node.UDPComponent(self, "UDP."+str(_id), self.nl.dataTransmission, self.nl.notification);
-
-        self.load = applications.Applications.Client(self, "ClientAppls", None, self.tl.connectionService)
-        #self.load = constanze.Node.ConstanzeComponent(self, "constanze")
-        self.mobility = rise.Mobility.Component(node = self, name = "mobility UT"+str(_id), mobility = _config.riseMobility)
-
-
-
 class RANG(wns.Node.Node):
     dll = None
     nl  = None
@@ -307,25 +202,3 @@ class RANG(wns.Node.Node):
         self.load = constanze.Node.ConstanzeComponent(self, "constanze")
 
 
-
-class RANGTLAppl(wns.Node.Node):
-    dll = None
-    nl  = None
-    tl = None
-    load = None
-
-    def __init__(self):
-        super(RANGTLAppl, self).__init__("RANG")
-        # create Tunnel to reach the APs
-        #self.tunnel = wimac.Tunnel.RANG(self)
-        self.dll = wimac.Rang.RANG(self)
-        self.dll.setStationID((256*255)-1)
-        # create Network Layer and Loadgen
-
-        self.nl = ip.Component.IPv4Component(self, "192.168.255.254", "192.168.255.254")
-        self.nl.addDLL("192.168.255.254", self.dll.dataTransmission, self.dll.notification)
-
-        self.tl = udp.Node.UDPComponent(self, "UDP.RANG", self.nl.dataTransmission, self.nl.notification);
-
-        self.load = applications.Applications.Client(self, "ServerAppls", None, self.tl.connectionService)
-        #self.load = constanze.Node.ConstanzeComponent(self, "constanze")
