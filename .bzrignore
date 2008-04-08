@@ -1,6 +1,8 @@
 .arch-ids
 {arch}
-configBase/output
-configSubframeTDD/output_*
-configSubframeTDD/stderr.log
-configSubframeTDD/stdout.log
+output*
+stderr.log
+stdout.log
+*.junk
+*.csv
+.BACKUP
