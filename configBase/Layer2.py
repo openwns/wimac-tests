@@ -40,7 +40,7 @@ class Layer2(dll.Layer2.Layer2):
     frameBuilder = None
     rngCompoundSwitch = None
 
-    # probes
+    # Probes
     topTpProbe = None
     topPProbe = None
     bottomThroughputProbe = None
@@ -124,9 +124,9 @@ class Layer2(dll.Layer2.Layer2):
             bandwidth = config.parametersPhy.channelBandwidth,
             numberOfSubCarrier = config.parametersPhy.subchannels )
 
-        self.topTpProbe = wns.Probe.Window( "TopTp", "wimac.top", 0.01 )
+        self.topTpProbe = wns.Probe.Window( "TopTp", "wimac.top", windowSize=0.01 )        
         self.topPProbe = wns.Probe.Packet( "TopP", "wimac.top" )
-        self.bottomThroughputProbe = wns.Probe.Window( "BottomThroughput", "wimac.bottom", 0.01 )
+        self.bottomThroughputProbe = wns.Probe.Window( "BottomThroughput", "wimac.bottom", windowSize=0.01 )
         self.bottomPacketProbe = wns.Probe.Packet( "BottomPacket", "wimac.bottom" )
 
     def buildFUN(self, config):

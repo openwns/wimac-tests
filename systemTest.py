@@ -29,7 +29,7 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                            workingDir = 'configBase')
 
 checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_SC1_PDF.dat',
-                                              ['probe.trials == 10', 'probe.mean == 9511600.0'],
+                                              ['probe.trials == 10', 'probe.mean == 9480000.0'],
                                               'dbg')
 
 
@@ -55,14 +55,14 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                             workingDir = 'configSDMA')
 
 checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_SC1_PDF.dat',
-                                              ['probe.trials == 98', 'probe.mean == 10166857.0'],
+                                              ['probe.trials == 98', 'probe.mean == 10162318.0'],
                                               'dbg')
 
 
 testSuite.addTest(checkULThroughput)
 
 checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_SC1_PDF.dat',
-                                              ['probe.trials == 49', 'probe.mean == 18209567.0'],
+                                              ['probe.trials == 49', 'probe.mean == 18200490.0'],
                                               'dbg')
 
 testSuite.addTest(checkDLThroughput)
@@ -82,13 +82,13 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                            workingDir = 'configSubframe')
 
 checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.Ring1_SC2_PDF.dat',
-                                              ['probe.trials == 9', 'probe.mean < 4.5294e+06', 'probe.mean > 4.529e+06'],
+                                              ['probe.trials == 9', 'probe.mean == 10533333.0'],
                                               'dbg')
 testSuite.addTest(checkDLThroughput)
 
 
 checkRing2ULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.Ring2_SC2_PDF.dat',
-                                              ['probe.trials == 18', 'probe.mean < 2.7387e+06', 'probe.mean > 2.7386e+06'],
+                                              ['probe.trials == 18', 'probe.mean == 5266666.7'],
                                               'dbg')
 testSuite.addTest(checkRing2ULThroughput)
 
