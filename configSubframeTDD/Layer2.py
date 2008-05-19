@@ -69,7 +69,7 @@ class Layer2(dll.Layer2.Layer2):
 
     def __init__(self, node, stationName, config):
         super(Layer2, self).__init__(node, stationName)
-        self.nameInComponentFactory = "wimac.Layer2"
+        self.nameInComponentFactory = "wimac.Component"
 
         self.associations = []
         self.randomStartDelayMax = 0.0
