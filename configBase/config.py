@@ -26,6 +26,7 @@ import Nodes
 import Layer2
 import wimac.KeyBuilder as CIDKeyBuilder
 import wimac.Probes
+import wimac.evaluation.default
 
 from support.WiMACParameters import ParametersSystem, ParametersOFDM, ParametersMAC, ParametersPropagation, ParametersPropagation_NLOS
 from support.scenarioSupport import setupRelayScenario
@@ -37,10 +38,6 @@ random.seed(7)
 
 
 associations = {}
-
-
-# glue probes are not needed here
-#wns.WNS.WNS.modules.glue.probes = {}
 
 ####################################################
 ###  Distinguished Simulation Settings             #
@@ -276,8 +273,7 @@ for st in associations[accessPoints[0]]:
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
 
-WNS.modules.wimac.probes = wimac.Probes.getProbesDict([1], loggingStationIDs)
-
+wimac.evaluation.default.installDefaultEvaluation(WNS, [1], loggingStationIDs)
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")
