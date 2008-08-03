@@ -25,7 +25,6 @@ from wns.Sealed import Sealed
 import Nodes
 import Layer2
 import wimac.KeyBuilder as CIDKeyBuilder
-import wimac.Probes
 import wimac.evaluation.default
 
 from support.WiMACParameters import ParametersSystem, ParametersOFDM, ParametersMAC, ParametersPropagation, ParametersPropagation_NLOS
@@ -94,7 +93,6 @@ class Config(Frozen):
 WNS = wns.WNS.WNS()
 WNS.maxSimTime = 0.1 # seconds
 #Probe settings
-WNS.PDataBase.settlingTime = 0.01
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = False
 #WNS.masterLogger.loggerChain = [ wns.Logger.FormatOutputPair( wns.Logger.Console(), wns.Logger.File()) ]
@@ -273,7 +271,7 @@ for st in associations[accessPoints[0]]:
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
 
-wimac.evaluation.default.installDefaultEvaluation(WNS, [1], loggingStationIDs)
+wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")
