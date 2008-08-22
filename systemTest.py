@@ -23,7 +23,7 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                            executeable = "wns-core",
                                            configFile = 'config.py',
                                            shortDescription = 'WiMAC: simple one on one',
-                                           requireReferenceOutput = False,
+                                           requireReferenceOutput = True,
                                            disabled = False,
                                            disabledReason = "",
                                            workingDir = 'configBase')

@@ -17,7 +17,7 @@ import ofdmaphy.OFDMAPhy
 import rise.Scenario
 import rise.Mobility
 from wns import Position
-from speetcl.probes.AccessList import AccessList
+#from speetcl.probes.AccessList import AccessList
 from constanze.Node import IPBinding, IPListenerBinding, Listener
 from wns.Frozen import Frozen
 from wns.Sealed import Sealed
@@ -272,6 +272,7 @@ for st in associations[accessPoints[0]]:
         loggingStationIDs.append(st.dll.stationID)
 
 wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
+wns.evaluation.default.installEvaluation(WNS)
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")
