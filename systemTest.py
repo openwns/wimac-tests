@@ -23,19 +23,19 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                            executeable = "wns-core",
                                            configFile = 'config.py',
                                            shortDescription = 'WiMAC: simple one on one',
-                                           requireReferenceOutput = False,
+                                           requireReferenceOutput = True,
                                            disabled = False,
                                            disabledReason = "",
                                            workingDir = 'configBase')
 
-checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_SC1_PDF.dat',
+checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_PDF.dat',
                                               ['probe.trials == 10', 'probe.mean == 9480000.0'],
                                               'dbg')
 
 
 testSuite.addTest(checkULThroughput)
 
-checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_SC1_PDF.dat',
+checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_PDF.dat',
                                               ['probe.trials == 10', 'probe.mean == 4234400.0'],
                                               'dbg')
 
@@ -50,8 +50,8 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                             configFile = 'config.py',
                                             shortDescription = 'WiMAC: Test with SDMA Scheduler',
                                             requireReferenceOutput = False,
-                                            disabled = False,
-                                            disabledReason = "",
+                                            disabled = True,
+                                            disabledReason = "Pending migration to openwns.evaluation",
                                             workingDir = 'configSDMA')
 
 checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_SC1_PDF.dat',
@@ -77,8 +77,8 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                            configFile = 'config.py',
                                            shortDescription = 'WiMAC: Relay enhanced cell',
                                            requireReferenceOutput = False,
-                                           disabled = False,
-                                           disabledReason = "",
+                                           disabled = True,
+                                           disabledReason = "Pending migration to openwns.evaluation",
                                            workingDir = 'configSubframe')
 
 checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.Ring1_SC2_PDF.dat',
@@ -111,8 +111,8 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                            configFile = 'config.py',
                                            shortDescription = 'WiMAC: Relay enhanced cell',
                                            requireReferenceOutput = False,
-                                           disabled = False,
-                                           disabledReason = "",
+                                           disabled = True,
+                                           disabledReason = "Pending migration to openwns.evaluation",
                                            workingDir = 'configSubframeTDD')
 # create a system test
 wimacTestSuite.addTest(testSuite)

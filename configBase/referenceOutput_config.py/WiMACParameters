@@ -1,0 +1,72 @@
+
+
+ParametersSystem:
+~~~~~~~~~~~~~~~~~~~
+          __doc__ = None
+          __module__ = support.WiMACParameters
+          antennaArrayLayoutAP = linear
+          antennaArrayLayoutFRS = linear
+          antennaArrayLayoutUT = linear
+          cellRadius = 750
+          centerFrequency = 5470
+          clusterOrder = 7
+          heightAP = 5.0
+          heightFRS = 5.0
+          heightUT = 1.5
+          noiseFigureAP = 5 dB
+          noiseFigureFRS = 5 dB
+          noiseFigureUT = 5 dB
+          numberOfAntennaAPRxTx = 4
+          numberOfAntennaFRSRxTx = 4
+          numberOfAntennaUTRxTx = 1
+          txPowerAP = 30 dBm
+          txPowerFRS = 30 dBm
+          txPowerUT = 30 dBm
+
+
+
+ParametersOFDM:
+~~~~~~~~~~~~~~~~~~~
+          __doc__ = None
+          __module__ = support.WiMACParameters
+          channelBandwidth = 20
+          cyclicPrefix = 0.25
+          dataSubCarrier = 192
+          dcSubCarrier = 1
+          dlPreamble = 2
+          fch = 1
+          fftSize = 256
+          frameDuration = 0.01
+          frameHead = 3
+          guardSubCarriers = 55
+          guardTime = 2.77777777778e-06
+          ie = 48
+          mapBase = 56
+          minimumBitsPerSymbol = 96
+          pilotSubCarrier = 8
+          rtg = 2.77777777778e-05
+          samplingFrequency = 23040000.0
+          subCarrierSpacing = 90000.0
+          subcarrierPerSubchannel = 192
+          subchannels = 1
+          symbolDuration = 1.38888888889e-05
+          symbolsFrame = 720
+          ttg = 2.77777777778e-05
+          usefulSymbolTime = 1.11111111111e-05
+
+
+
+ParametersMAC:
+~~~~~~~~~~~~~~~~~~~
+          __doc__ = None
+          __module__ = support.WiMACParameters
+          bwReqSlotLength = 2
+          bwReqSlots = 5
+          dlUlRatio = 0.5
+          pduOverhead = 48
+          rangingSlotLength = 8
+          rangingSlots = 2
+          subFrameRatio = 0
+
+
+
