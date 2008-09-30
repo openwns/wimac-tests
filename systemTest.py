@@ -50,8 +50,8 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                             configFile = 'config.py',
                                             shortDescription = 'WiMAC: Test with SDMA Scheduler',
                                             requireReferenceOutput = False,
-                                            disabled = True,
-                                            disabledReason = "Pending migration to openwns.evaluation",
+                                            disabled = False,
+                                            disabledReason = "",
                                             workingDir = 'configSDMA')
 
 checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_SC1_PDF.dat',
