@@ -17,7 +17,6 @@ import ofdmaphy.OFDMAPhy
 import rise.Scenario
 import rise.Mobility
 from wns import Position
-from speetcl.probes.AccessList import AccessList
 from constanze.Node import IPBinding, IPListenerBinding, Listener
 from wns.Frozen import Frozen
 from wns.Sealed import Sealed
@@ -25,7 +24,7 @@ from wns.Sealed import Sealed
 import Nodes
 import Layer2
 import wimac.KeyBuilder as CIDKeyBuilder
-import wimac.Probes
+import wimac.evaluation.default
 
 from support.WiMACParameters import ParametersSystem, ParametersOFDM, ParametersMAC, ParametersPropagation, ParametersPropagation_NLOS
 from support.scenarioSupport import setupRelayScenario
@@ -98,7 +97,6 @@ class Config(Frozen):
 WNS = wns.WNS.WNS()
 WNS.maxSimTime = 0.2 # seconds
 #Probe settings
-WNS.PDataBase.settlingTime = 0.1
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = False
 #WNS.masterLogger.loggerChain = [ wns.Logger.FormatOutputPair( wns.Logger.Console(), wns.Logger.File()) ]
@@ -111,8 +109,8 @@ WNS.probesWriteInterval = 3600 # in seconds
 ### PHY (PHysical Layer) settings                  #
 ####################################################
 riseConfig = WNS.modules.rise
-riseConfig.debug.transmitter = True
-riseConfig.debug.main = True
+riseConfig.debug.transmitter = False
+riseConfig.debug.main = False
 
 # from ./modules/phy/OFDMAPhy--unstable--0.3/PyConfig/ofdmaphy/OFDMAPhy.py
 ofdmaPhyConfig = WNS.modules.ofdmaPhy
@@ -310,8 +308,8 @@ for st in associations[accessPoints[0]]:
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
 
-WNS.modules.wimac.probes = wimac.Probes.getProbesDict([1], loggingStationIDs)
-
+wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
+wns.evaluation.default.installEvaluation(WNS)
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")

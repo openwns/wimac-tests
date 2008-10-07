@@ -17,7 +17,6 @@ import ofdmaphy.OFDMAPhy
 import rise.Scenario
 import rise.Mobility
 from wns import Position
-from speetcl.probes.AccessList import AccessList
 from constanze.Node import IPBinding, IPListenerBinding, Listener
 from wns.Frozen import Frozen
 from wns.Sealed import Sealed
@@ -25,7 +24,7 @@ from wns.Sealed import Sealed
 import Nodes
 import Layer2
 import wimac.KeyBuilder as CIDKeyBuilder
-import wimac.Probes
+import wimac.evaluation.default
 
 from support.WiMACParameters import ParametersSystem, ParametersOFDM, ParametersMAC, ParametersPropagation, ParametersPropagation_NLOS
 from support.scenarioSupport import setupRelayScenario
@@ -37,10 +36,6 @@ random.seed(7)
 
 
 associations = {}
-
-
-# glue probes are not needed here
-#wns.WNS.WNS.modules.glue.probes = {}
 
 ####################################################
 ###  Distinguished Simulation Settings             #
@@ -98,9 +93,8 @@ class Config(Frozen):
 WNS = wns.WNS.WNS()
 WNS.maxSimTime = 0.5 # seconds
 #Probe settings
-WNS.PDataBase.settlingTime = 0.0
 WNS.masterLogger.backtrace.enabled = False
-WNS.masterLogger.enabled = True
+WNS.masterLogger.enabled = False
 #WNS.masterLogger.loggerChain = [ wns.Logger.FormatOutputPair( wns.Logger.Console(), wns.Logger.File()) ]
 WNS.outputStrategy = wns.WNS.OutputStrategy.DELETE
 WNS.statusWriteInterval = 120 # in seconds
@@ -132,14 +126,6 @@ WNS.modules.wimac.parametersPHY = Config.parametersPhy
 ####################################################
 # one RANG
 rang = Nodes.RANG()
-
-## Registry Proxy of the Scheduler does Space-Time-Sectorization
-spaceTimeSectorization = False
-if(spaceTimeSectorization):
-    # you should better use a circular array layout
-    wimac.Scheduler.SpaceTimeSectorizationRegistryProxy.numberOfSectors = 2
-    wimac.Scheduler.SpaceTimeSectorizationRegistryProxy.numberOfSubsectors = 1
-    wimac.Scheduler.Scheduler.registry = wimac.Scheduler.SpaceTimeSectorizationRegistryProxy
 
 # BSs with some SSs each
 
@@ -285,8 +271,8 @@ for st in associations[accessPoints[0]]:
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
 
-WNS.modules.wimac.probes = wimac.Probes.getProbesDict([1], loggingStationIDs)
-
+wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
+wns.evaluation.default.installEvaluation(WNS)
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")

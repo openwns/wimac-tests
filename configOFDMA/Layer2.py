@@ -71,9 +71,6 @@ class Layer2(dll.Layer2.Layer2):
     connectionControl = None
     associateTo = None
     qosCategory = None
-    centerFrequency = None
-    bandwidth = None
-    subCarriers = None
     randomStartDelayMax = None
 
     def __init__(self, node, stationName, config):
@@ -90,8 +87,8 @@ class Layer2(dll.Layer2.Layer2):
             wimac.Services.ConnectionManager( "connectionManager", "fuReseter" ) )
 
         interferenceCache = dll.Services.InterferenceCache( "interferenceCache", alphaLocal = 0.2, alphaRemote= 0.05 ) 
-        interferenceCache.notFoundStrategy.averageCarrier = "-96.0 dBm"
-        interferenceCache.notFoundStrategy.averageInterference = "-88.0 dBm"
+        interferenceCache.notFoundStrategy.averageCarrier = "-88.0 dBm"
+        interferenceCache.notFoundStrategy.averageInterference = "-96.0 dBm"
         interferenceCache.notFoundStrategy.deviationCarrier = "0.0 mW"
         interferenceCache.notFoundStrategy.deviationInterference = "0.0 mW"
         interferenceCache.notFoundStrategy.averagePathloss = "0.0 dB"
@@ -124,13 +121,13 @@ class Layer2(dll.Layer2.Layer2):
         self.compoundSwitch = wimac.CompoundSwitch.CompoundSwitch()
 
         self.phyUser = wimac.PhyUser.PhyUser(
-            frequency = config.parametersSystem.centerFrequency,
+            centerFrequency = config.parametersSystem.centerFrequency,
             bandwidth = config.parametersPhy.channelBandwidth,
             numberOfSubCarrier = config.parametersPhy.subchannels )
 
-        self.topTpProbe = wns.Probe.Window( "TopTp", "wimac.top", 0.01 )
+        self.topTpProbe = wns.Probe.Window( "TopTp", "wimac.top", windowSize=0.01 )
         self.topPProbe = wns.Probe.Packet( "TopP", "wimac.top" )
-        self.bottomThroughputProbe = wns.Probe.Window( "BottomThroughput", "wimac.bottom", 0.01 )
+        self.bottomThroughputProbe = wns.Probe.Window( "BottomThroughput", "wimac.bottom", windowSize=0.01 )
         self.bottomPacketProbe = wns.Probe.Packet( "BottomPacket", "wimac.bottom" )
 
     def buildFUN(self, config):

@@ -5,7 +5,7 @@ import wimac.FUReseter
 import wns.Tools
 import math
 from wimac.FrameBuilder import ActivationAction, OperationMode
-import WiMAC_FrameSetup as FrameSetup
+import support.FrameSetup as FrameSetup
 
 class Association:
     def __init__(self,source, destination, id):
@@ -22,7 +22,6 @@ class BaseStation(Layer2):
     def __init__(self, node, config):
         super(BaseStation, self).__init__(node, "BS", config)
         self.ring = 1
-        self.phyUser.frequency = config.parametersSystem.centerFrequency
         self.qosCategory = 'NoQoS'
 
         # BaseStation specific components
@@ -53,8 +52,6 @@ class BaseStation(Layer2):
             beamforming = config.beamforming,
             friendliness_dBm = config.friendliness_dBm,
             plotFrames = False,
-            resetedBitsProbeName = "wimac.schedulerQueue.reseted.bits",
-            resetedCompoundsProbeName = "wimac.schedulerQueue.reseted.compounds",
             callback = wimac.Scheduler.DLCallback( beamforming = config.beamforming )
             )
 	self.ulContentionRNGc = wimac.FrameBuilder.ContentionCollector('frameBuilder', contentionAccess = wimac.FrameBuilder.ContentionCollector.ContentionAccess(False, 8, 3) )
@@ -129,13 +126,13 @@ class BaseStation(Layer2):
         activation = wimac.FrameBuilder.Activation('dlmapcollector',
                                                    OperationMode( OperationMode.Sending ),
                                                    ActivationAction( ActivationAction.StartCollection ),
-                                                   myFrameSetup.dlDataLength )
+                                                   myFrameSetup.dlMapLength )
         self.frameBuilder.timingControl.addActivation( activation )
 
         activation = wimac.FrameBuilder.Activation('ulmapcollector',
                                                    OperationMode( OperationMode.Sending ),
                                                    ActivationAction( ActivationAction.StartCollection ),
-                                                   myFrameSetup.ulDataLength )
+                                                   myFrameSetup.ulMapLength )
         self.frameBuilder.timingControl.addActivation( activation )
 
         activation = wimac.FrameBuilder.Activation('dlscheduler',
@@ -259,6 +256,9 @@ class SubscriberStation(Layer2):
         self.qosCategory = 'BE'
         self.ring = destination.ring + 1
         self.connectionControl.associateTo(destination.stationID)
+        self.phyUser.config.bandwidth = destination.phyUser.config.bandwidth
+        self.phyUser.config.centerFrequency = destination.phyUser.config.centerFrequency
+        self.phyUser.config.numberOfSubCarrier = destination.phyUser.config.numberOfSubCarrier
 
     def connect(self):
         # Connections Dataplane
@@ -303,13 +303,13 @@ class SubscriberStation(Layer2):
         activation = wimac.FrameBuilder.Activation('dlmapcollector',
                                                    OperationMode( OperationMode.Receiving ),
                                                    ActivationAction( ActivationAction.StartCollection ),
-                                                   myFrameSetup.dlDataLength )
+                                                   myFrameSetup.dlMapLength )
         self.frameBuilder.timingControl.addActivation( activation )
 
         activation = wimac.FrameBuilder.Activation('ulmapcollector',
                                                    OperationMode( OperationMode.Receiving ),
                                                    ActivationAction( ActivationAction.StartCollection ),
-                                                   myFrameSetup.ulDataLength )
+                                                   myFrameSetup.ulMapLength )
         self.frameBuilder.timingControl.addActivation( activation )
 
         activation = wimac.FrameBuilder.Activation('dlscheduler',

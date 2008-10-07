@@ -52,8 +52,6 @@ class BaseStation(Layer2):
             beamforming = config.beamforming,
             friendliness_dBm = config.friendliness_dBm,
             plotFrames = False,
-            resetedBitsProbeName = "wimac.schedulerQueue.reseted.bits",
-            resetedCompoundsProbeName = "wimac.schedulerQueue.reseted.compounds",
             callback = wimac.Scheduler.DLCallback( beamforming = config.beamforming )
             )
 	self.ulContentionRNGc = wimac.FrameBuilder.ContentionCollector('frameBuilder', contentionAccess = wimac.FrameBuilder.ContentionCollector.ContentionAccess(False, 8, 3) )

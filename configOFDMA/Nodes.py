@@ -4,7 +4,6 @@ import wns.Node
 import constanze.Constanze
 import rise.Mobility
 import ip.Component
-import applications
 
 from ofdmaphy.Station import OFDMAStation, OFDMAComponent
 
@@ -206,6 +205,5 @@ class RANG(wns.Node.Node):
                        _dllNotification = self.dll.notification)
 
         self.load = constanze.Node.ConstanzeComponent(self, "constanze")
-
 
 
