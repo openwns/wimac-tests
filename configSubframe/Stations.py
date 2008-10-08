@@ -48,8 +48,6 @@ class BaseStation(Layer2):
             beamforming = config.beamforming,
             friendliness_dBm = config.friendliness_dBm,
             plotFrames = False,
-            resetedBitsProbeName = "wimac.schedulerQueue.reseted.bits",
-            resetedCompoundsProbeName = "wimac.schedulerQueue.reseted.compounds",
             callback = wimac.Scheduler.DLCallback( beamforming = config.beamforming )
             )
 
@@ -347,8 +345,6 @@ class RelayStation(Layer2):
             beamforming = config.beamforming,
             friendliness_dBm = config.friendliness_dBm,
             plotFrames = False,
-            resetedBitsProbeName = "wimac.schedulerQueue.reseted.bits",
-            resetedCompoundsProbeName = "wimac.schedulerQueue.reseted.compounds",
             callback = wimac.Scheduler.DLCallback( beamforming = config.beamforming )
             )
         self.dlscheduler.rxScheduler = wimac.FrameBuilder.SSDLScheduler('frameBuilder', 'dlmapcollector')

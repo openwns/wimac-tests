@@ -36,7 +36,7 @@ checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitTh
 testSuite.addTest(checkULThroughput)
 
 checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_PDF.dat',
-                                              ['probe.trials == 10', 'probe.mean == 4234400.0'],
+                                              ['probe.trials == 10', 'probe.mean == 4202800.0'],
                                               'dbg')
 
 testSuite.addTest(checkDLThroughput)
@@ -54,15 +54,15 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                             disabledReason = "",
                                             workingDir = 'configSDMA')
 
-checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_SC1_PDF.dat',
-                                              ['probe.trials == 98', 'probe.mean == 10162318.0'],
+checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_PDF.dat',
+                                              ['probe.trials == 98', 'probe.mean == 10166857.1428571'],
                                               'dbg')
 
 
 testSuite.addTest(checkULThroughput)
 
-checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_SC1_PDF.dat',
-                                              ['probe.trials == 49', 'probe.mean == 18200490.0'],
+checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_PDF.dat',
+                                              ['probe.trials == 49', 'probe.mean == 18209567.3469388'],
                                               'dbg')
 
 testSuite.addTest(checkDLThroughput)
@@ -78,26 +78,26 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                            shortDescription = 'WiMAC: Relay enhanced cell',
                                            requireReferenceOutput = False,
                                            disabled = True,
-                                           disabledReason = "Pending migration to openwns.evaluation",
+                                           disabledReason = "pending reconfiguration of the compound switch",
                                            workingDir = 'configSubframe')
 
-checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.Ring1_SC2_PDF.dat',
+checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.Ring1_PDF.dat',
                                               ['probe.trials == 9', 'probe.mean == 10533333.0'],
                                               'dbg')
 testSuite.addTest(checkDLThroughput)
 
 
-checkRing2ULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.Ring2_SC2_PDF.dat',
+checkRing2ULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.Ring2_PDF.dat',
                                               ['probe.trials == 18', 'probe.mean == 5266666.7'],
                                               'dbg')
 testSuite.addTest(checkRing2ULThroughput)
 
-checkRing3ULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.Ring3_SC2_PDF.dat',
+checkRing3ULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.Ring3_PDF.dat',
                                               ['probe.mean == 0.0'],
                                               'dbg')
 testSuite.addTest(checkRing3ULThroughput)
 
-checkRing4ULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.Ring4_SC2_PDF.dat',
+checkRing4ULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.Ring4_PDF.dat',
                                               ['probe.mean > 9.1e+05'],
                                               'dbg')
 testSuite.addTest(checkRing3ULThroughput)
@@ -127,7 +127,7 @@ if __name__ == '__main__':
     pywns.WNSUnit.verbosity = verbosity
 
     # Create test runner
-    testRunner = pywns.WNSUnit.TextTestRunner()#verbosity=verbosity)
+    testRunner = pywns.WNSUnit.TextTestRunner()
 
     # Finally, run the tests.
     for it in wimacTestSuite:
