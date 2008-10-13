@@ -101,9 +101,9 @@ class BaseStation(Layer2):
         self.frameBuilder.connect(self.phyUser)
 
     def setupCompoundSwitch(self):
-        self.compoundSwitch.onDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
-        self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
-        self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterNone('None') )
+        self.compoundSwitch.onDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
+        self.compoundSwitch.sendDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
+        self.compoundSwitch.sendDataFilters.append( dll.CompoundSwitch.FilterNone('None') )
 
 
     def setupFrame(self, config):
@@ -420,7 +420,7 @@ class RelayStation(Layer2):
         self.frameBuilder.connect(self.phyUser)
 
     def setupCompoundSwitch(self):
-	self.compoundSwitch.onDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
+	self.compoundSwitch.onDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
         self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.RelayDirection('Down', wimac.Relay.Direction.Down) )
         self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.RelayDirection('Up', wimac.Relay.Direction.Up) )
 
@@ -732,7 +732,7 @@ class SubscriberStation(Layer2):
         self.frameBuilder.connect(self.phyUser)
 
     def setupCompoundSwitch(self):
-	self.compoundSwitch.onDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
-	self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
+	self.compoundSwitch.onDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
+	self.compoundSwitch.sendDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
 
 
