@@ -16,7 +16,6 @@ from ip.VirtualDNS import VirtualDNSServer
 import ofdmaphy.OFDMAPhy
 import rise.Scenario
 import rise.Mobility
-from wns import Position
 from constanze.Node import IPBinding, IPListenerBinding, Listener
 from wns.Frozen import Frozen
 from wns.Sealed import Sealed

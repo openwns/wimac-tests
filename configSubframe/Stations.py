@@ -103,7 +103,7 @@ class BaseStation(Layer2):
     def setupCompoundSwitch(self):
         self.compoundSwitch.onDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
         self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
-        self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterNone('None') )
+        #self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterNone('None') )
 
 
     def setupFrame(self, config):

@@ -98,7 +98,7 @@ WNS = wns.WNS.WNS()
 WNS.maxSimTime = 0.2 # seconds
 #Probe settings
 WNS.masterLogger.backtrace.enabled = False
-WNS.masterLogger.enabled = False
+WNS.masterLogger.enabled = True
 #WNS.masterLogger.loggerChain = [ wns.Logger.FormatOutputPair( wns.Logger.Console(), wns.Logger.File()) ]
 WNS.outputStrategy = wns.WNS.OutputStrategy.DELETE
 WNS.statusWriteInterval = 120 # in seconds
