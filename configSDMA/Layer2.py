@@ -18,7 +18,7 @@ import wns.ARQ
 import wns.SAR
 import wns.Tools
 import wns.FCF
-import wimac.CompoundSwitch
+import dll.CompoundSwitch
 import wimac.Relay
 import dll.UpperConvergence
 import wimac.FrameBuilder
@@ -117,7 +117,7 @@ class Layer2(dll.Layer2.Layer2):
                                CRCsize = config.parametersMAC.pduOverhead,
                                isDropping = False)
         self.errormodelling = wimac.ErrorModelling.ErrorModelling('phyUser','phyUser',PrintMappings=False)
-        self.compoundSwitch = wimac.CompoundSwitch.CompoundSwitch()
+        self.compoundSwitch = dll.CompoundSwitch.CompoundSwitch()
 
         self.phyUser = wimac.PhyUser.PhyUser(
             centerFrequency = config.parametersSystem.centerFrequency,

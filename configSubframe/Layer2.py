@@ -27,6 +27,7 @@ import wimac.KeyBuilder
 import wimac.ErrorModelling
 import wimac.PhyUser
 import dll.Services
+import dll.CompoundSwitch
 import wimac.Services
 from wimac.ProbeStartStop import ProbeStartStop
 from wimac.FUs import Classifier, BufferDropping, ACKSwitch
@@ -123,7 +124,7 @@ class Layer2(dll.Layer2.Layer2):
                                CRCsize = config.parametersMAC.pduOverhead,
                                isDropping = False)
         self.errormodelling = wimac.ErrorModelling.ErrorModelling('phyUser','phyUser',PrintMappings=False)
-        self.compoundSwitch = wimac.CompoundSwitch.CompoundSwitch()
+        self.compoundSwitch = dll.CompoundSwitch.CompoundSwitch()
 
         self.phyUser = wimac.PhyUser.PhyUser(
             centerFrequency = config.parametersSystem.centerFrequency,
