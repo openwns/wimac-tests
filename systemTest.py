@@ -20,7 +20,7 @@ wimacTestSuite = pywns.WNSUnit.TestSuite()
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- Base Test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
-                                           executeable = "wns-core",
+                                           
                                            configFile = 'config.py',
                                            shortDescription = 'WiMAC: simple one on one',
                                            requireReferenceOutput = True,
@@ -46,7 +46,7 @@ wimacTestSuite.addTest(testSuite)
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- SDMA Test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
-                                           executeable = "wns-core",
+                                           
                                             configFile = 'config.py',
                                             shortDescription = 'WiMAC: Test with SDMA Scheduler',
                                             requireReferenceOutput = False,
@@ -73,7 +73,7 @@ wimacTestSuite.addTest(testSuite)
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- Subframe Test ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
-                                           executeable = "wns-core",
+                                           
                                            configFile = 'config.py',
                                            shortDescription = 'WiMAC: Relay enhanced cell',
                                            requireReferenceOutput = False,
@@ -107,7 +107,7 @@ wimacTestSuite.addTest(testSuite)
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- Subframe TDD Test ~~~~~~~~~~~~~~~~~~~~~~~~~
 testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
-                                           executeable = "wns-core",
+                                           
                                            configFile = 'config.py',
                                            shortDescription = 'WiMAC: Relay enhanced cell',
                                            requireReferenceOutput = False,
