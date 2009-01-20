@@ -1,7 +1,7 @@
 import math
 import openwns.geometry.position
 import openwns.node
-import constanze.Constanze
+import constanze.traffic
 import rise.Mobility
 import ip.Component
 
@@ -56,7 +56,7 @@ class SubscriberStation(openwns.node.Node):
 
         self.nl.addRoute("0.0.0.0", "0.0.0.0", "192.168.254.254", "wimax")
 
-        self.load = constanze.Node.ConstanzeComponent(self, "constanze")
+        self.load = constanze.node.ConstanzeComponent(self, "constanze")
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility UT"+str(_id),
                                                 mobility = rise.Mobility.No(openwns.geometry.position.Position())
@@ -107,7 +107,7 @@ class RemoteStation(openwns.node.Node):
 
         self.nl.addRoute("0.0.0.0", "0.0.0.0", "192.168.254.254", "wimax")
 
-        self.load = constanze.Node.ConstanzeComponent(self, "constanze")
+        self.load = constanze.node.ConstanzeComponent(self, "constanze")
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility UT"+str(_id),
                                                 mobility = rise.Mobility.No(openwns.geometry.position.Position()))
@@ -204,6 +204,6 @@ class RANG(openwns.node.Node):
                        _dllDataTransmission = self.dll.dataTransmission,
                        _dllNotification = self.dll.notification)
 
-        self.load = constanze.Node.ConstanzeComponent(self, "constanze")
+        self.load = constanze.node.ConstanzeComponent(self, "constanze")
 
 

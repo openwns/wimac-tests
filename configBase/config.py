@@ -6,7 +6,9 @@ sys.path.append(os.path.join('..','commonConfig'))
 import rise
 import wns.WNS
 import wns.Node
-import constanze.Constanze
+import openwns
+import openwns.evaluation.default
+import constanze.traffic
 import ip.IP
 import ip.AddressResolver
 from ip.VirtualARP import VirtualARPServer
@@ -16,7 +18,7 @@ from ip.VirtualDNS import VirtualDNSServer
 import ofdmaphy.OFDMAPhy
 import rise.Scenario
 import rise.Mobility
-from constanze.Node import IPBinding, IPListenerBinding, Listener
+from constanze.node import IPBinding, IPListenerBinding, Listener
 from wns.Frozen import Frozen
 from wns.Sealed import Sealed
 
@@ -156,11 +158,11 @@ k = 0
 for bs in accessPoints:
     for i in xrange(Config.nSSs):
         ss = Nodes.SubscriberStation(stationIDs.next(), Config)
-        cbrDL = constanze.Constanze.CBR(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
+        cbrDL = constanze.traffic.CBR(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
         ipBinding = IPBinding(rang.nl.domainName, ss.nl.domainName)
         rang.load.addTraffic(ipBinding, cbrDL)
 
-        cbrUL = constanze.Constanze.CBR(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
+        cbrUL = constanze.traffic.CBR(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
         ipBinding = IPBinding(ss.nl.domainName, rang.nl.domainName)
         ss.load.addTraffic(ipBinding, cbrUL)
         ipListenerBinding = IPListenerBinding(ss.nl.domainName)
@@ -201,11 +203,11 @@ for bs in accessPoints:
         for i in xrange(Config.nRmSs):
             ss = Nodes.SubscriberStation(stationIDs.next(), Config)
             ss.dll.logger.level = 2
-            cbrDL = constanze.Constanze.CBR(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
+            cbrDL = constanze.traffic.CBR(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
             ipBinding = IPBinding(rang.nl.domainName, ss.nl.domainName)
             rang.load.addTraffic(ipBinding, cbrDL)
 
-            cbrUL = constanze.Constanze.CBR(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
+            cbrUL = constanze.traffic.CBR(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
             ipBinding = IPBinding(ss.nl.domainName, rang.nl.domainName)
             ss.load.addTraffic(ipBinding, cbrUL)
             ipListenerBinding = IPListenerBinding(ss.nl.domainName)
@@ -270,7 +272,7 @@ for st in associations[accessPoints[0]]:
         loggingStationIDs.append(st.dll.stationID)
 
 wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
-wns.evaluation.default.installEvaluation(WNS)
+openwns.evaluation.default.installEvaluation(WNS)
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")

@@ -18,6 +18,7 @@ import wns.ARQ
 import wns.SAR
 import wns.Tools
 import wns.FCF
+import wns.CRC
 import dll.CompoundSwitch
 import wimac.Relay
 import dll.UpperConvergence
