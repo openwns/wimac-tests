@@ -26,6 +26,7 @@ import Layer2
 import wimac.KeyBuilder as CIDKeyBuilder
 import wimac.evaluation.default
 
+import wns.evaluation.default
 from support.WiMACParameters import ParametersSystem, ParametersOFDM, ParametersMAC, ParametersPropagation, ParametersPropagation_NLOS
 from support.scenarioSupport import setupRelayScenario
 from support.scenarioSupport import calculateScenarioRadius, numberOfAccessPointsForHexagonalScenario

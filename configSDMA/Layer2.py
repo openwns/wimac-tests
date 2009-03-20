@@ -12,6 +12,7 @@ import wimac.KeyBuilder
 from wns.FUN import FUN, Node
 from wns.FlowSeparator import FlowSeparator
 
+import wns.CRC
 import wns.Probe
 import wns.Buffer
 import wns.ARQ
