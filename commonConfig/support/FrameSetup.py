@@ -79,7 +79,7 @@ class BasicFrameSetup(Sealed):
 
             # model behaviour of the scheduler:
             maxNumberIEs = _servedSS * subchannels
-            if dlStrategy == "ProportionalFair":
+            if dlStrategy == "ProportionalFairDL":
                 if ( maxBursts < _servedSS ):
                     maxNumberIEs = maxBursts * subchannels
             elif dlStrategy == "RelayPreferredProportionalFair":

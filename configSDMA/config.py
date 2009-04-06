@@ -58,7 +58,7 @@ class Config(Frozen):
     maxBursts = 20
 
     #only considered for mapsizes not synchronized with actual scheduling strategy
-    dlStrategy = "ProportionalFair"
+    dlStrategy = "ProportionalFairDL"
     ulStrategy = "ProportionalFairUL"
 
     parametersSystem.numberOfAntennaAPTx = 4

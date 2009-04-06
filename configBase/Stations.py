@@ -46,8 +46,8 @@ class BaseStation(Layer2):
         self.dlscheduler.txScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",
             config.parametersPhy.symbolDuration,
-            strategy = wns.Scheduler.ProportionalFair(historyWeight = 0.99,
-                                                      maxBursts = config.maxBursts),
+            strategy = wns.Scheduler.ProportionalFairDL(historyWeight = 0.99,
+                                                        maxBursts = config.maxBursts),
             freqChannels = config.parametersPhy.subchannels,
             maxBeams = config.maxBeams,
             beamforming = config.beamforming,
