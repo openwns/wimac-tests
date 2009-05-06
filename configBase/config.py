@@ -4,8 +4,7 @@ sys.path.append(os.path.join('.','commonConfig'))
 sys.path.append(os.path.join('..','commonConfig'))
 
 import rise
-import wns.WNS
-import wns.Node
+import openwns.node
 import openwns
 import openwns.evaluation.default
 import constanze.traffic
@@ -19,8 +18,8 @@ import ofdmaphy.OFDMAPhy
 import rise.Scenario
 import rise.Mobility
 from constanze.node import IPBinding, IPListenerBinding, Listener
-from wns.Frozen import Frozen
-from wns.Sealed import Sealed
+from openwns.pyconfig import Frozen
+from openwns.pyconfig import Sealed
 
 import Nodes
 import Layer2
@@ -90,13 +89,13 @@ class Config(Frozen):
 
 # create an instance of the WNS configuration
 # The variable must be called WNS!!!!
-WNS = wns.WNS.WNS()
+WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
 WNS.maxSimTime = 0.1 # seconds
 #Probe settings
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = False
 #WNS.masterLogger.loggerChain = [ wns.Logger.FormatOutputPair( wns.Logger.Console(), wns.Logger.File()) ]
-WNS.outputStrategy = wns.WNS.OutputStrategy.DELETE
+WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
 WNS.statusWriteInterval = 120 # in seconds
 WNS.probesWriteInterval = 3600 # in seconds
 
@@ -144,7 +143,7 @@ for i in xrange(Config.nBSs):
     bs.dll.logger.level = 2
     accessPoints.append(bs)
     associations[bs]=[]
-    WNS.nodes.append(bs)
+    WNS.simulationModel.nodes.append(bs)
 
 # The RANG only has one IPListenerBinding that is attached
 # to the listener. The listener is the only traffic sink
@@ -171,7 +170,7 @@ for bs in accessPoints:
         ss.dll.associate(bs.dll)
         associations[bs].append(ss)
         userTerminals.append(ss)
-        WNS.nodes.append(ss)
+        WNS.simulationModel.nodes.append(ss)
     rang.dll.addAP(bs)
     k += 1
 
@@ -186,7 +185,7 @@ for bs in accessPoints:
         associations[rs]=[]
         associations[bs].append(rs)
         relayStations.append(rs)
-        WNS.nodes.append(rs)
+        WNS.simulationModel.nodes.append(rs)
 
         l += 1
     k += 1
@@ -218,14 +217,14 @@ for bs in accessPoints:
             # 192.168.1.254 = "nl address of RANG" = rang.nl.address ?
             associations[rs].append(ss)
             remoteStations.append(ss)
-            WNS.nodes.append(ss)
+            WNS.simulationModel.nodes.append(ss)
         l += 1
     k += 1
 
-WNS.nodes.append(rang)
+WNS.simulationModel.nodes.append(rang)
 
 # Positions of the stations are determined here
-setupRelayScenario(Config, WNS.nodes, associations)
+setupRelayScenario(Config, WNS.simulationModel.nodes, associations)
 
 #set mobility
 intracellMobility = False
@@ -276,7 +275,7 @@ openwns.evaluation.default.installEvaluation(WNS)
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")
-WNS.nodes = [varp] + WNS.nodes
+WNS.simulationModel.nodes = [varp] + WNS.simulationModel.nodes
 
 vdhcp = VirtualDHCPServer("vDHCP@",
                           "WIMAXRAN",
@@ -284,9 +283,9 @@ vdhcp = VirtualDHCPServer("vDHCP@",
                           "255.255.0.0")
 
 vdns = VirtualDNSServer("vDNS", "ip.DEFAULT.GLOBAL")
-WNS.nodes.append(vdns)
+WNS.simulationModel.nodes.append(vdns)
 
-WNS.nodes.append(vdhcp)
+WNS.simulationModel.nodes.append(vdhcp)
 
 ### PostProcessor ###
 postProcessor = PostProcessor.WiMACPostProcessor()
@@ -296,3 +295,4 @@ postProcessor.relayStations = relayStations
 postProcessor.userTerminals = userTerminals
 postProcessor.remoteStations = remoteStations
 WNS.addPostProcessing(postProcessor)
+openwns.setSimulator(WNS)

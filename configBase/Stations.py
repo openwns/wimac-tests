@@ -3,7 +3,7 @@ import dll.UpperConvergence
 import dll.CompoundSwitch
 import wimac.Scheduler
 import wimac.FUReseter
-import wns.Tools
+import openwns.Tools
 import math
 from wimac.FrameBuilder import ActivationAction, OperationMode
 import support.FrameSetup as FrameSetup
@@ -33,9 +33,9 @@ class BaseStation(Layer2):
         self.rngCompoundSwitch = dll.CompoundSwitch.CompoundSwitch()
         self.rngCompoundSwitch.onDataFilters.append(
             dll.CompoundSwitch.FilterAll('All') )
-	self.rngCompoundSwitch.sendDataFilters.append(
+        self.rngCompoundSwitch.sendDataFilters.append(
             dll.CompoundSwitch.FilterNone('None') )
-	self.rngCompoundSwitch.sendDataFilters.append(
+        self.rngCompoundSwitch.sendDataFilters.append(
             dll.CompoundSwitch.FilterAll('All') )
 
         # frame elements
@@ -46,7 +46,7 @@ class BaseStation(Layer2):
         self.dlscheduler.txScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",
             config.parametersPhy.symbolDuration,
-            strategy = wns.Scheduler.ProportionalFairDL(historyWeight = 0.99,
+            strategy = openwns.Scheduler.ProportionalFairDL(historyWeight = 0.99,
                                                         maxBursts = config.maxBursts,
                                                         powerControlSlave = False),
             freqChannels = config.parametersPhy.subchannels,
@@ -61,7 +61,7 @@ class BaseStation(Layer2):
         self.ulscheduler.rxScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",
             config.parametersPhy.symbolDuration,
-            strategy = wns.Scheduler.ProportionalFairUL(historyWeight = 0.99,
+            strategy = openwns.Scheduler.ProportionalFairUL(historyWeight = 0.99,
                                                         maxBursts = config.maxBursts,
                                                         powerControlSlave = False),
             freqChannels = config.parametersPhy.subchannels,

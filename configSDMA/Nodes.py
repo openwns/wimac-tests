@@ -1,6 +1,6 @@
 import math
 import wns
-import wns.Node
+import openwns.node
 import constanze.Constanze
 import rise.Mobility
 import ip.Component

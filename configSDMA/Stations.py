@@ -2,7 +2,7 @@ from Layer2 import *
 import dll.UpperConvergence
 import wimac.Scheduler
 import wimac.FUReseter
-import wns.Tools
+import openwns.Tools
 import math
 from wimac.FrameBuilder import ActivationAction, OperationMode
 import support.FrameSetup as FrameSetup
@@ -32,9 +32,9 @@ class BaseStation(Layer2):
         self.rngCompoundSwitch = dll.CompoundSwitch.CompoundSwitch()
         self.rngCompoundSwitch.onDataFilters.append(
             dll.CompoundSwitch.FilterAll('All') )
-	self.rngCompoundSwitch.sendDataFilters.append(
+        self.rngCompoundSwitch.sendDataFilters.append(
             dll.CompoundSwitch.FilterNone('None') )
-	self.rngCompoundSwitch.sendDataFilters.append(
+        self.rngCompoundSwitch.sendDataFilters.append(
             dll.CompoundSwitch.FilterAll('All') )
 
         # frame elements
@@ -45,7 +45,7 @@ class BaseStation(Layer2):
         self.dlscheduler.txScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",
             config.parametersPhy.symbolDuration,
-            strategy = wns.Scheduler.ProportionalFairDL(historyWeight = 0.99,
+            strategy = openwns.Scheduler.ProportionalFairDL(historyWeight = 0.99,
                                                         maxBursts = config.maxBursts),
             freqChannels = config.parametersPhy.subchannels,
             maxBeams = config.maxBeams,
@@ -54,12 +54,12 @@ class BaseStation(Layer2):
             plotFrames = False,
             callback = wimac.Scheduler.DLCallback( beamforming = config.beamforming )
             )
-	self.ulContentionRNGc = wimac.FrameBuilder.ContentionCollector('frameBuilder', contentionAccess = wimac.FrameBuilder.ContentionCollector.ContentionAccess(False, 8, 3) )
+        self.ulContentionRNGc = wimac.FrameBuilder.ContentionCollector('frameBuilder', contentionAccess = wimac.FrameBuilder.ContentionCollector.ContentionAccess(False, 8, 3) )
         self.ulscheduler = wimac.FrameBuilder.DataCollector('frameBuilder')
         self.ulscheduler.rxScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",
             config.parametersPhy.symbolDuration,
-            strategy = wns.Scheduler.ProportionalFairUL(historyWeight = 0.99,
+            strategy = openwns.Scheduler.ProportionalFairUL(historyWeight = 0.99,
                                                         maxBursts = config.maxBursts),
             freqChannels = config.parametersPhy.subchannels,
             maxBeams = config.maxBeams,
