@@ -110,9 +110,11 @@ riseConfig.debug.main = False
 riseConfig.debug.antennas = False
 
 # from ./modules/phy/OFDMAPhy--unstable--0.3/PyConfig/ofdmaphy/OFDMAPhy.py
+#scenario = rise.scenario.Hexagonal.Hexagonal(config.clusterSize, config.center, config.numOfCircles, config.cellRadius, config.numRN, nUT, config.distanceBetweenBSs, config.distanceBetweenBSandRN, nSectorsBS=1, corrAngle=0.0, rnShiftAngle=config.RN_Shift_Angle, useWraparound = config.useWraparound)
 ofdmaPhyConfig = WNS.modules.ofdmaPhy
 ofdmaPhySystem = ofdmaphy.OFDMAPhy.OFDMASystem('ofdma')
-ofdmaPhySystem.Scenario = rise.Scenario.Scenario(Config.scenarioXSize, Config.scenarioYSize)
+#ofdmaPhySystem.Scenario = rise.Scenario.Scenario(Config.scenarioXSize, Config.scenarioYSize)
+ofdmaPhySystem.Scenario = rise.Scenario.Scenario()
 ofdmaPhyConfig.systems.append(ofdmaPhySystem)
 
 ####################################################
