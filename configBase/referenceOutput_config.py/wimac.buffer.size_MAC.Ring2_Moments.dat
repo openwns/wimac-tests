@@ -1,0 +1,29 @@
+#  PROBE RESULTS (THIS IS A MAGIC LINE)
+# ---------------------------------------------------------------------------
+# Evaluation: Moments
+# ---------------------------------------------------------------------------
+#  Name: wimac.buffer.size
+#  Description: Buffer fill level
+# ---------------------------------------------------------------------------
+#  Evaluation terminated successfully!
+# ---------------------------------------------------------------------------
+#  Common Statistics 
+#  Minimum: 0.0100000
+#  Maximum: 0.7500000
+#  Trials: 634
+#  Mean: 0.3540536
+# 
+#  Variance: 0.0168507
+#  Relative variance: 0.1344248
+#  Coefficient of variation: 0.3666399
+#  Standard deviation: 0.1298102
+#  Relative standard deviation: 0.3666399
+# 
+#  Skewness: 0.4329425
+# 
+#  2nd moment: 0.1421781
+#  3rd moment: 0.0631989
+# 
+#  Sum of all values: 224.4700000
+#  (Sum of all values)^2: 90.1409000
+#  (Sum of all values)^3: 40.0681330
