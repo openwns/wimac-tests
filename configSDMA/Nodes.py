@@ -1,7 +1,7 @@
 import math
-import wns
+import openwns
 import openwns.node
-import constanze.Constanze
+import constanze.traffic
 import rise.Mobility
 import ip.Component
 
@@ -13,7 +13,7 @@ import wimac.Rang
 from support.scenarioSupport import convertMACtoIP
 from support.Transceiver import Transceiver
 
-class SubscriberStation(wns.Node.Node):
+class SubscriberStation(openwns.node.Node):
     phy = None
     dll = None
     nl  = None
@@ -56,15 +56,15 @@ class SubscriberStation(wns.Node.Node):
 
         self.nl.addRoute("0.0.0.0", "0.0.0.0", "192.168.254.254", "wimax")
 
-        self.load = constanze.Node.ConstanzeComponent(self, "constanze")
+        self.load = constanze.node.ConstanzeComponent(self, "constanze")
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility UT"+str(_id),
-                                                mobility = rise.Mobility.No(wns.Position())
+                                                mobility = rise.Mobility.No(openwns.Position())
                                                 )
 
 
 
-class RemoteStation(wns.Node.Node):
+class RemoteStation(openwns.node.Node):
     phy = None
     dll = None
     nl  = None
@@ -107,14 +107,14 @@ class RemoteStation(wns.Node.Node):
 
         self.nl.addRoute("0.0.0.0", "0.0.0.0", "192.168.254.254", "wimax")
 
-        self.load = constanze.Node.ConstanzeComponent(self, "constanze")
+        self.load = constanze.node.ConstanzeComponent(self, "constanze")
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility UT"+str(_id),
-                                                mobility = rise.Mobility.No(wns.Position()))
+                                                mobility = rise.Mobility.No(openwns.Position()))
 
 
 
-class RelayStation(wns.Node.Node):
+class RelayStation(openwns.node.Node):
     phy = None
     dll = None
     mobility = None
@@ -143,11 +143,11 @@ class RelayStation(wns.Node.Node):
         # create PHY
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility FRS"+str(_id),
-                                                mobility = rise.Mobility.No(wns.Position()))
+                                                mobility = rise.Mobility.No(openwns.Position()))
 
 
 
-class BaseStation(wns.Node.Node):
+class BaseStation(openwns.node.Node):
     phy = None
     dll = None
     mobility = None
@@ -175,10 +175,10 @@ class BaseStation(wns.Node.Node):
         self.dll.setPhyNotification(self.phy.notification)
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility AP"+str(_id),
-                                                mobility = rise.Mobility.No(wns.Position()))
+                                                mobility = rise.Mobility.No(openwns.Position()))
 
 
-class RANG(wns.Node.Node):
+class RANG(openwns.node.Node):
     dll = None
     nl  = None
     load = None
@@ -204,5 +204,5 @@ class RANG(wns.Node.Node):
                        _dllDataTransmission = self.dll.dataTransmission,
                        _dllNotification = self.dll.notification)
 
-        self.load = constanze.Node.ConstanzeComponent(self, "constanze")
+        self.load = constanze.node.ConstanzeComponent(self, "constanze")
 

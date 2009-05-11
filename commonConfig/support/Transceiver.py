@@ -1,4 +1,4 @@
-from wns.Sealed import Sealed
+from openwns.pyconfig import Sealed
 from rise.Transmitter import Transmitter
 import rise.scenario.Propagation
 from ofdmaphy.Receiver import OFDMAReceiver

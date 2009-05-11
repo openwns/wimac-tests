@@ -1,8 +1,8 @@
 from math import ceil, floor
 
-from wns.Sealed import Sealed
+from openwns.pyconfig import Sealed
 
-from wns.FCF import FrameBuilderNode, BasicPhaseDescriptor, DurationPolicy
+from openwns.FCF import FrameBuilderNode, BasicPhaseDescriptor, DurationPolicy
 
 
 

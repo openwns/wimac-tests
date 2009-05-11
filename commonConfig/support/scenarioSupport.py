@@ -1,11 +1,11 @@
 import math
 import random
 #from pyx import *
-from wns import Position
+from openwns import Position
 from rise.Mobility import EventList
-from wns.Distribution import Fixed
+from openwns.distribution import Fixed
 from rise.Antenna import *
-from wns.Sealed import Sealed
+from openwns.pyconfig import Sealed
 from support.WiMACParameters import ParametersSystem
 
 class Openangle(Sealed):
