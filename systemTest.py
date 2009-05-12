@@ -117,6 +117,7 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
 # create a system test
 wimacTestSuite.addTest(testSuite)
 
+testSuite = wimacTestSuite
 
 if __name__ == '__main__':
     # This is only evaluated if the script is called by hand

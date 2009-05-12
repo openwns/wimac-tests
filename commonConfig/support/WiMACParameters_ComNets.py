@@ -22,8 +22,8 @@
 """
 
 from math import *
-from wns.Frozen import Frozen
-from wns import dBm, dB
+from openwns.pyconfig import Frozen
+from openwns import dBm, dB
 
 def getSamplingFrequencyOFDM(bandwidth, cyclicPrefix):
     """
@@ -417,7 +417,7 @@ class ParametersMAC(Frozen):
 #  Propagation Model                                                          #
 ###############################################################################
 
-from wns.Interval import Interval
+from openwns.interval import Interval
 import rise.scenario.Propagation
 import rise.scenario.Pathloss as Pathloss
 import rise.scenario.Shadowing as Shadowing
