@@ -142,36 +142,36 @@ class Layer2(dll.Layer2.Layer2):
         self.bufferSep = Node('bufferSep', self.bufferSep)
         self.crc = Node('crc', self.crc)
         self.errormodelling = Node('errormodelling', self.errormodelling)
-	self.phyUser = Node('phyUser', self.phyUser)
+        self.phyUser = Node('phyUser', self.phyUser)
         self.framehead = Node('framehead', self.framehead)
         self.dlmapcollector = Node('dlmapcollector', self.dlmapcollector)
         self.ulmapcollector = Node('ulmapcollector', self.ulmapcollector)
         self.dlscheduler = Node('dlscheduler', self.dlscheduler)
         self.ulscheduler = Node('ulscheduler', self.ulscheduler)
-	self.ulContentionRNGc = Node('ulcontentionrngc', self.ulContentionRNGc)
+        self.ulContentionRNGc = Node('ulcontentionrngc', self.ulContentionRNGc)
         self.frameBuilder = Node('frameBuilder', self.frameBuilder)
 
         #Dataplane
         self.compoundSwitch = Node('compoundSwitch', self.compoundSwitch)
 
-	self.fun.setFunctionalUnits(
-            self.compoundSwitch,
-	    self.upperconvergence,
-            self.topTpProbe,
-            self.topPProbe,
-            self.classifier,
-            self.synchronizer,
-            self.crc,
-            self.errormodelling,
-            self.phyUser,
-            self.bufferSep,
-  	    self.framehead,
-  	    self.dlmapcollector,
-            self.ulmapcollector,
-            self.dlscheduler,
-            self.ulContentionRNGc,
-            self.ulscheduler,
-            self.frameBuilder
+        self.fun.setFunctionalUnits(
+        self.compoundSwitch,
+        self.upperconvergence,
+        self.topTpProbe,
+        self.topPProbe,
+        self.classifier,
+        self.synchronizer,
+        self.crc,
+        self.errormodelling,
+        self.phyUser,
+        self.bufferSep,
+        self.framehead,
+        self.dlmapcollector,
+        self.ulmapcollector,
+        self.dlscheduler,
+        self.ulContentionRNGc,
+        self.ulscheduler,
+        self.frameBuilder
             )
 
 

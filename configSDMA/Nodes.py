@@ -59,7 +59,7 @@ class SubscriberStation(openwns.node.Node):
         self.load = constanze.node.ConstanzeComponent(self, "constanze")
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility UT"+str(_id),
-                                                mobility = rise.Mobility.No(openwns.Position())
+                                                mobility = rise.Mobility.No(openwns.geometry.position.Position())
                                                 )
 
 
@@ -110,7 +110,7 @@ class RemoteStation(openwns.node.Node):
         self.load = constanze.node.ConstanzeComponent(self, "constanze")
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility UT"+str(_id),
-                                                mobility = rise.Mobility.No(openwns.Position()))
+                                                mobility = rise.Mobility.No(openwns.geometry.position.Position()))
 
 
 
@@ -143,7 +143,7 @@ class RelayStation(openwns.node.Node):
         # create PHY
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility FRS"+str(_id),
-                                                mobility = rise.Mobility.No(openwns.Position()))
+                                                mobility = rise.Mobility.No(openwns.geometry.position.Position()))
 
 
 
@@ -175,7 +175,7 @@ class BaseStation(openwns.node.Node):
         self.dll.setPhyNotification(self.phy.notification)
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility AP"+str(_id),
-                                                mobility = rise.Mobility.No(openwns.Position()))
+                                                mobility = rise.Mobility.No(openwns.geometry.position.Position()))
 
 
 class RANG(openwns.node.Node):

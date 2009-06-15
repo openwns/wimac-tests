@@ -1,7 +1,7 @@
 import math
 import random
 #from pyx import *
-from openwns import Position
+from openwns.geometry.position import Position
 from rise.Mobility import EventList
 from openwns.distribution import Fixed
 from rise.Antenna import *
