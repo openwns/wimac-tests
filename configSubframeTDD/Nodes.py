@@ -1,6 +1,7 @@
 import math
 import wns
 import wns.Node
+import openwns.geometry.position
 import constanze.Constanze
 import rise.Mobility
 import ip.Component
@@ -59,7 +60,7 @@ class SubscriberStation(wns.Node.Node):
         self.load = constanze.Node.ConstanzeComponent(self, "constanze")
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility UT"+str(_id),
-                                                mobility = rise.Mobility.No(wns.Position()))
+                                                mobility = rise.Mobility.No(openwns.geometry.position.Position()))
 
 
 
@@ -107,7 +108,7 @@ class RemoteStation(wns.Node.Node):
         self.load = constanze.Node.ConstanzeComponent(self, "constanze")
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility UT"+str(_id),
-                                                mobility = rise.Mobility.No(wns.Position()))
+                                                mobility = rise.Mobility.No(openwns.geometry.position.Position()))
 
 
 
@@ -139,7 +140,7 @@ class RelayStation(wns.Node.Node):
         # create PHY
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility FRS"+str(_id),
-                                                mobility = rise.Mobility.No(wns.Position()))
+                                                mobility = rise.Mobility.No(openwns.geometry.position.Position()))
 
 
 
@@ -170,7 +171,7 @@ class BaseStation(wns.Node.Node):
         self.dll.setPhyNotification(self.phy.notification)
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility AP"+str(_id),
-                                                mobility = rise.Mobility.No(wns.Position()))
+                                                mobility = rise.Mobility.No(openwns.geometry.position.Position()))
 
 
 class RANG(wns.Node.Node):

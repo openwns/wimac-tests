@@ -103,11 +103,9 @@ class BaseStation(Layer2):
         self.frameBuilder.connect(self.phyUser)
 
     def setupCompoundSwitch(self):
-        self.compoundSwitch.onDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
-        self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
-        self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterNone('None') )
-
-
+        self.compoundSwitch.onDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
+        self.compoundSwitch.sendDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
+        
     def setupFrame(self, config):
 
         myFrameSetup = FrameSetup.FrameSetup(config)
@@ -394,7 +392,7 @@ class RelayStation(Layer2):
         self.associations.append(it)
         self.associateTo = destination.stationID
         self.qosCategory = 'BE'
-        self.ring = destination.ring + 2
+        self.setRing(destination.ring + 2)
         self.connectionControl.associateTo(destination.stationID)
         self.phyUser.config.bandwidth = destination.phyUser.config.bandwidth
         self.phyUser.config.centerFrequency = destination.phyUser.config.centerFrequency
@@ -424,7 +422,7 @@ class RelayStation(Layer2):
         self.frameBuilder.connect(self.phyUser)
 
     def setupCompoundSwitch(self):
-	self.compoundSwitch.onDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
+	self.compoundSwitch.onDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
         self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.RelayDirection('Down', wimac.Relay.Direction.Down) )
         self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.RelayDirection('Up', wimac.Relay.Direction.Up) )
 
@@ -704,7 +702,7 @@ class SubscriberStation(Layer2):
         self.associations.append(it)
         self.associateTo = destination.stationID
         self.qosCategory = 'BE'
-        self.ring = destination.ring + 1
+        self.setRing(destination.ring + 1)
         self.connectionControl.associateTo(destination.stationID)
         self.phyUser.config.bandwidth = destination.phyUser.config.bandwidth
         self.phyUser.config.centerFrequency = destination.phyUser.config.centerFrequency
@@ -737,8 +735,8 @@ class SubscriberStation(Layer2):
         self.frameBuilder.connect(self.phyUser)
 
     def setupCompoundSwitch(self):
-	self.compoundSwitch.onDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
-	self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
+	self.compoundSwitch.onDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
+	self.compoundSwitch.sendDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
 
 
         

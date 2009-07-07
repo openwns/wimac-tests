@@ -6,6 +6,9 @@ sys.path.append(os.path.join('..','commonConfig'))
 import rise
 import wns.WNS
 import wns.Node
+import wns.CRC
+import wns.Scheduler
+import openwns.evaluation.default
 import constanze.Constanze
 import ip.IP
 import ip.AddressResolver
@@ -16,7 +19,7 @@ from ip.VirtualDNS import VirtualDNSServer
 import ofdmaphy.OFDMAPhy
 import rise.Scenario
 import rise.Mobility
-from wns import Position
+from openwns.geometry.position import Position
 from constanze.Node import IPBinding, IPListenerBinding, Listener
 from wns.Frozen import Frozen
 from wns.Sealed import Sealed
@@ -310,7 +313,7 @@ for st in associations[accessPoints[0]]:
         loggingStationIDs.append(st.dll.stationID)
 
 wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
-wns.evaluation.default.installEvaluation(WNS)
+openwns.evaluation.default.installEvaluation(WNS)
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")

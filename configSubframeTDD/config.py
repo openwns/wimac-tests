@@ -6,6 +6,9 @@ sys.path.append(os.path.join('..','commonConfig'))
 import rise
 import wns.WNS
 import wns.Node
+import wns.CRC
+import wns.Scheduler
+import openwns.evaluation.default
 import constanze.Constanze
 import ip.IP
 import ip.AddressResolver
@@ -16,8 +19,7 @@ from ip.VirtualDNS import VirtualDNSServer
 import ofdmaphy.OFDMAPhy
 import rise.Scenario
 import rise.Mobility
-from wns import Position
-from speetcl.probes.AccessList import AccessList
+from openwns.geometry.position import Position
 from constanze.Node import IPBinding, IPListenerBinding, Listener
 from wns.Frozen import Frozen
 from wns.Sealed import Sealed
@@ -25,7 +27,7 @@ from wns.Sealed import Sealed
 import Nodes
 import Layer2
 import wimac.KeyBuilder as CIDKeyBuilder
-import wimac.Probes
+import wimac.evaluation.default
 
 from support.WiMACParameters import ParametersSystem, ParametersOFDM, ParametersMAC, ParametersPropagation, ParametersPropagation_NLOS
 from support.scenarioSupport import setupRelayScenario
@@ -98,7 +100,6 @@ class Config(Frozen):
 WNS = wns.WNS.WNS()
 WNS.maxSimTime = 0.2 # seconds
 #Probe settings
-WNS.PDataBase.settlingTime = 0.1
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = False
 #WNS.masterLogger.loggerChain = [ wns.Logger.FormatOutputPair( wns.Logger.Console(), wns.Logger.File()) ]
@@ -311,8 +312,8 @@ for st in associations[accessPoints[0]]:
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
 
-WNS.modules.wimac.probes = wimac.Probes.getProbesDict([1], loggingStationIDs)
-
+wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
+openwns.evaluation.default.installEvaluation(WNS)
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")
