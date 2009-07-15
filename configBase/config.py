@@ -273,6 +273,10 @@ for st in associations[accessPoints[0]]:
         loggingStationIDs.append(st.dll.stationID)
 
 wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
+
+symbolsInFrame = Config.parametersPhy.symbolsFrame
+wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, symbolsInFrame, [1], loggingStationIDs)
+
 openwns.evaluation.default.installEvaluation(WNS)
 
 # one Virtual ARP Zone
