@@ -63,13 +63,15 @@ class Config(Frozen):
 
     packetSize = 3000 #in bit
     trafficUL = 10000000 # bit/s per station
-    trafficDL = 10000000
+    trafficDL = 100000000
+
+    oldPFScheduler = False
 
     nSectors = 1
     nCircles = 0
     nBSs = numberOfAccessPointsForHexagonalScenario(nCircles)
     nRSs = 0
-    nSSs = 1
+    nSSs = 2
     nRmSs = 0
 
     numberOfStations =  nBSs * ( nRSs + nSSs + nRmSs * nRSs + 1 )
@@ -90,14 +92,14 @@ class Config(Frozen):
 # create an instance of the WNS configuration
 # The variable must be called WNS!!!!
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 0.1 # seconds
+WNS.maxSimTime = 10 # seconds
 #Probe settings
 WNS.masterLogger.backtrace.enabled = False
-WNS.masterLogger.enabled = False
+WNS.masterLogger.enabled = True
 #WNS.masterLogger.loggerChain = [ wns.Logger.FormatOutputPair( wns.Logger.Console(), wns.Logger.File()) ]
 WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
-WNS.statusWriteInterval = 120 # in seconds
-WNS.probesWriteInterval = 3600 # in seconds
+WNS.statusWriteInterval = 30 # in seconds
+WNS.probesWriteInterval = 30 # in seconds
 
 
 ####################################################
@@ -159,11 +161,11 @@ k = 0
 for bs in accessPoints:
     for i in xrange(Config.nSSs):
         ss = Nodes.SubscriberStation(stationIDs.next(), Config)
-        cbrDL = constanze.traffic.CBR(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
+        cbrDL = constanze.traffic.Poisson(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
         ipBinding = IPBinding(rang.nl.domainName, ss.nl.domainName)
         rang.load.addTraffic(ipBinding, cbrDL)
 
-        cbrUL = constanze.traffic.CBR(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
+        cbrUL = constanze.traffic.Poisson(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
         ipBinding = IPBinding(ss.nl.domainName, rang.nl.domainName)
         ss.load.addTraffic(ipBinding, cbrUL)
         ipListenerBinding = IPListenerBinding(ss.nl.domainName)
@@ -253,6 +255,14 @@ if(intracellMobility):
         ss.mobility.mobility = rise.Mobility.BrownianCirc(center=bsPos,
                                                           maxDistance = maxDistance_ )
 
+bsPos =  accessPoints[0].mobility.mobility.getCoords()
+
+userTerminals[0].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(10,0,0))
+userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1700,0,0))
+print "BSPos:" + str(bsPos)
+print "UT1Pos:" + str(userTerminals[0].mobility.mobility.getCoords())
+print "UT2Pos:" + str(userTerminals[1].mobility.mobility.getCoords())
+
 # TODO: for multihop simulations: replicate the code for remote stations
 
 #plotStations.plot()
@@ -272,10 +282,47 @@ for st in associations[accessPoints[0]]:
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
 
-wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
+#wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
 
-symbolsInFrame = Config.parametersPhy.symbolsFrame
-wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, symbolsInFrame, [1], loggingStationIDs)
+sources = ["wimac.top.window.incoming.bitThroughput", 
+            "wimac.top.window.aggregated.bitThroughput", 
+            "wimac.cirSDMA",
+            "wimac.top.packet.incoming.delay"]
+
+for src in sources:
+    
+    node = openwns.evaluation.createSourceNode(WNS, src)
+    nodeBS = node.appendChildren(openwns.evaluation.generators.Accept(
+                        by = 'MAC.StationType', ifIn = [1], suffix = "BS"))
+    #nodeRS = node.appendChildren(openwns.evaluation.generators.Accept(
+    #                    by = 'MAC.StationType', ifIn = [2], suffix = "RS"))
+    nodeUT = node.appendChildren(openwns.evaluation.generators.Accept(
+                        by = 'MAC.StationType', ifIn = [3], suffix = "UT"))
+    nodeBS.appendChildren(openwns.evaluation.generators.Separate(
+                        by = 'MAC.Id', forAll = [1], format = "Id%d"))                    
+    nodeUT.appendChildren(openwns.evaluation.generators.Separate(
+                        by = 'MAC.Id', forAll = loggingStationIDs, format = "Id%d"))
+                        
+    if src == "wimac.cirSDMA":
+        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
+                                                    minXValue = -100,
+                                                    maxXValue = 100,
+                                                    resolution =  2000))
+    elif "window" in src:                          
+        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
+                                                    minXValue = 0.0,
+                                                    maxXValue = 120.0e+6,
+                                                    resolution =  1000))
+                                        
+    elif "packet" in src:                          
+        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
+                                                    minXValue = 0.0,
+                                                    maxXValue = 1.0,
+                                                    resolution =  100))
+
+
+#symbolsInFrame = Config.parametersPhy.symbolsFrame
+#wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, symbolsInFrame, [1], loggingStationIDs)
 
 openwns.evaluation.default.installEvaluation(WNS)
 
