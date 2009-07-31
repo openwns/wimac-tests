@@ -4,12 +4,10 @@ sys.path.append(os.path.join('.','commonConfig'))
 sys.path.append(os.path.join('..','commonConfig'))
 
 import rise
-import wns.WNS
-import wns.Node
-import wns.CRC
-import wns.Scheduler
+import openwns.node
+import openwns
 import openwns.evaluation.default
-import constanze.Constanze
+import constanze.traffic
 import ip.IP
 import ip.AddressResolver
 from ip.VirtualARP import VirtualARPServer
@@ -19,10 +17,9 @@ from ip.VirtualDNS import VirtualDNSServer
 import ofdmaphy.OFDMAPhy
 import rise.Scenario
 import rise.Mobility
-from openwns.geometry.position import Position
-from constanze.Node import IPBinding, IPListenerBinding, Listener
-from wns.Frozen import Frozen
-from wns.Sealed import Sealed
+from constanze.node import IPBinding, IPListenerBinding, Listener
+from openwns.pyconfig import Frozen
+from openwns.pyconfig import Sealed
 
 import Nodes
 import Layer2
@@ -67,7 +64,9 @@ class Config(Frozen):
 
     packetSize = 3000 #5120
     trafficUL = 10000000 # bit/s per station
-    trafficDL = 10000000
+    trafficDL = 1000000
+
+    oldPFScheduler = False
 
     nSectors = 1
 
@@ -97,23 +96,24 @@ class Config(Frozen):
 
 # create an instance of the WNS configuration
 # The variable must be called WNS!!!!
-WNS = wns.WNS.WNS()
-WNS.maxSimTime = 0.2 # seconds
+WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
+WNS.maxSimTime = 0.1 # seconds
 #Probe settings
 WNS.masterLogger.backtrace.enabled = False
-WNS.masterLogger.enabled = False
+WNS.masterLogger.enabled = True
 #WNS.masterLogger.loggerChain = [ wns.Logger.FormatOutputPair( wns.Logger.Console(), wns.Logger.File()) ]
-WNS.outputStrategy = wns.WNS.OutputStrategy.DELETE
-WNS.statusWriteInterval = 120 # in seconds
-WNS.probesWriteInterval = 3600 # in seconds
+WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
+WNS.statusWriteInterval = 30 # in seconds
+WNS.probesWriteInterval = 30 # in seconds
 
 
 ####################################################
 ### PHY (PHysical Layer) settings                  #
 ####################################################
 riseConfig = WNS.modules.rise
-riseConfig.debug.transmitter = True
-riseConfig.debug.main = True
+riseConfig.debug.transmitter = False
+riseConfig.debug.main = False
+riseConfig.debug.antennas = False
 
 # from ./modules/phy/OFDMAPhy--unstable--0.3/PyConfig/ofdmaphy/OFDMAPhy.py
 ofdmaPhyConfig = WNS.modules.ofdmaPhy
@@ -151,7 +151,7 @@ for i in xrange(Config.nBSs):
     bs.dll.logger.level = 2
     accessPoints.append(bs)
     associations[bs]=[]
-    WNS.nodes.append(bs)
+    WNS.simulationModel.nodes.append(bs)
 
 # The RANG only has one IPListenerBinding that is attached
 # to the listener. The listener is the only traffic sink
@@ -165,11 +165,11 @@ k = 0
 for bs in accessPoints:
     for i in xrange(Config.nSSs):
         ss = Nodes.SubscriberStation(stationIDs.next(), Config)
-        cbrDL = constanze.Constanze.CBR(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
+        cbrDL = constanze.traffic.Poisson(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
         ipBinding = IPBinding(rang.nl.domainName, ss.nl.domainName)
         rang.load.addTraffic(ipBinding, cbrDL)
 
-        cbrUL = constanze.Constanze.CBR(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
+        cbrUL = constanze.traffic.Poisson(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
         ipBinding = IPBinding(ss.nl.domainName, rang.nl.domainName)
         ss.load.addTraffic(ipBinding, cbrUL)
         ipListenerBinding = IPListenerBinding(ss.nl.domainName)
@@ -178,7 +178,7 @@ for bs in accessPoints:
         ss.dll.associate(bs.dll)
         associations[bs].append(ss)
         userTerminals.append(ss)
-        WNS.nodes.append(ss)
+        WNS.simulationModel.nodes.append(ss)
     rang.dll.addAP(bs)
     k += 1
 
@@ -193,7 +193,7 @@ for bs in accessPoints:
         associations[rs]=[]
         associations[bs].append(rs)
         relayStations.append(rs)
-        WNS.nodes.append(rs)
+        WNS.simulationModel.nodes.append(rs)
 
         l += 1
     k += 1
@@ -210,11 +210,11 @@ for bs in accessPoints:
         for i in xrange(Config.nRmSs):
             ss = Nodes.SubscriberStation(stationIDs.next(), Config)
             ss.dll.logger.level = 2
-            cbrDL = constanze.Constanze.CBR(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
+            cbrDL = constanze.traffic.CBR(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
             ipBinding = IPBinding(rang.nl.domainName, ss.nl.domainName)
             rang.load.addTraffic(ipBinding, cbrDL)
 
-            cbrUL = constanze.Constanze.CBR(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
+            cbrUL = constanze.traffic.CBR(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
             ipBinding = IPBinding(ss.nl.domainName, rang.nl.domainName)
             ss.load.addTraffic(ipBinding, cbrUL)
             ipListenerBinding = IPListenerBinding(ss.nl.domainName)
@@ -225,14 +225,14 @@ for bs in accessPoints:
             # 192.168.1.254 = "nl address of RANG" = rang.nl.address ?
             associations[rs].append(ss)
             remoteStations.append(ss)
-            WNS.nodes.append(ss)
+            WNS.simulationModel.nodes.append(ss)
         l += 1
     k += 1
 
-WNS.nodes.append(rang)
+WNS.simulationModel.nodes.append(rang)
 
 # Positions of the stations are determined here
-setupRelayScenario(Config, WNS.nodes, associations)
+setupRelayScenario(Config, WNS.simulationModel.nodes, associations)
 
 #set mobility
 intracellMobility = False
@@ -312,12 +312,53 @@ for st in associations[accessPoints[0]]:
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
 
-wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
+#wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
+
+sources = ["wimac.top.window.incoming.bitThroughput", 
+            "wimac.top.window.aggregated.bitThroughput", 
+            "wimac.cirSDMA",
+            "wimac.top.packet.incoming.delay"]
+
+for src in sources:
+    
+    node = openwns.evaluation.createSourceNode(WNS, src)
+    nodeBS = node.appendChildren(openwns.evaluation.generators.Accept(
+                        by = 'MAC.StationType', ifIn = [1], suffix = "BS"))
+    #nodeRS = node.appendChildren(openwns.evaluation.generators.Accept(
+    #                    by = 'MAC.StationType', ifIn = [2], suffix = "RS"))
+    nodeUT = node.appendChildren(openwns.evaluation.generators.Accept(
+                        by = 'MAC.StationType', ifIn = [3], suffix = "UT"))
+    nodeBS.appendChildren(openwns.evaluation.generators.Separate(
+                        by = 'MAC.Id', forAll = [1], format = "Id%d"))                    
+    nodeUT.appendChildren(openwns.evaluation.generators.Separate(
+                        by = 'MAC.Id', forAll = loggingStationIDs, format = "Id%d"))
+                        
+    if src == "wimac.cirSDMA":
+        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
+                                                    minXValue = -100,
+                                                    maxXValue = 100,
+                                                    resolution =  2000))
+    elif "window" in src:                          
+        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
+                                                    minXValue = 0.0,
+                                                    maxXValue = 120.0e+6,
+                                                    resolution =  1000))
+                                        
+    elif "packet" in src:                          
+        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
+                                                    minXValue = 0.0,
+                                                    maxXValue = 1.0,
+                                                    resolution =  100))
+
+
+#symbolsInFrame = Config.parametersPhy.symbolsFrame
+#wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, symbolsInFrame, [1], loggingStationIDs)
+
 openwns.evaluation.default.installEvaluation(WNS)
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")
-WNS.nodes = [varp] + WNS.nodes
+WNS.simulationModel.nodes = [varp] + WNS.simulationModel.nodes
 
 vdhcp = VirtualDHCPServer("vDHCP@",
                           "WIMAXRAN",
@@ -325,9 +366,9 @@ vdhcp = VirtualDHCPServer("vDHCP@",
                           "255.255.0.0")
 
 vdns = VirtualDNSServer("vDNS", "ip.DEFAULT.GLOBAL")
-WNS.nodes.append(vdns)
+WNS.simulationModel.nodes.append(vdns)
 
-WNS.nodes.append(vdhcp)
+WNS.simulationModel.nodes.append(vdhcp)
 
 ### PostProcessor ###
 postProcessor = PostProcessor.WiMACPostProcessor()
@@ -337,3 +378,4 @@ postProcessor.relayStations = relayStations
 postProcessor.userTerminals = userTerminals
 postProcessor.remoteStations = remoteStations
 WNS.addPostProcessing(postProcessor)
+openwns.setSimulator(WNS)

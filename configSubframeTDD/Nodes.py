@@ -2,7 +2,8 @@ import math
 import wns
 import wns.Node
 import openwns.geometry.position
-import constanze.Constanze
+import openwns.node
+import constanze.traffic
 import rise.Mobility
 import ip.Component
 #import applications
@@ -16,7 +17,7 @@ from support.scenarioSupport import convertMACtoIP
 from support.Transceiver import Transceiver
 from support.WiMACParameters import ParametersSystem, ParametersOFDMA
 
-class SubscriberStation(wns.Node.Node):
+class SubscriberStation(openwns.node.Node):
     phy = None
     dll = None
     nl  = None
@@ -31,8 +32,10 @@ class SubscriberStation(wns.Node.Node):
         self.dll = Stations.SubscriberStation(self, _config)#, ring = 2)
         self.dll.setStationID(_id)
         phyStation = OFDMAStation([transceiver.receiver['UT']], [transceiver.transmitter['UT']],
+                                  eirpLimited = _config.eirpLimited,
                                   noOfAntenna = _config.parametersSystem.numberOfAntennaUTRxTx,
-                                  arrayLayout = _config.arrayLayout)
+                                  arrayLayout = _config.arrayLayout,
+                                  positionErrorVariance = _config.positionErrorVariance)
         phyStation.txFrequency = _config.parametersSystem.centerFrequency
         phyStation.rxFrequency = _config.parametersSystem.centerFrequency
         phyStation.txPower = _config.parametersSystem.txPowerUT
@@ -57,14 +60,15 @@ class SubscriberStation(wns.Node.Node):
 
         self.nl.addRoute("0.0.0.0", "0.0.0.0", "192.168.254.254", "wimax")
 
-        self.load = constanze.Node.ConstanzeComponent(self, "constanze")
+        self.load = constanze.node.ConstanzeComponent(self, "constanze")
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility UT"+str(_id),
-                                                mobility = rise.Mobility.No(openwns.geometry.position.Position()))
+                                                mobility = rise.Mobility.No(openwns.geometry.position.Position())
+                                                )
 
 
 
-class RemoteStation(wns.Node.Node):
+class RemoteStation(openwns.node.Node):
     phy = None
     dll = None
     nl  = None
@@ -79,8 +83,10 @@ class RemoteStation(wns.Node.Node):
         self.dll = Stations.RemoteStation(self, _config)#, ring = 4)
         self.dll.setStationID(_id)
         phyStation = OFDMAStation([transceiver.receiver['UT']], [transceiver.transmitter['UT']],
+                                  eirpLimited = _config.eirpLimited,
                                   noOfAntenna = _config.parametersSystem.numberOfAntennaUTRxTx,
-                                  arrayLayout = _config.arrayLayout)
+                                  arrayLayout = _config.arrayLayout,
+                                  positionErrorVariance = _config.positionErrorVariance)
         phyStation.txFrequency = _config.parametersSystem.centerFrequency
         phyStation.rxFrequency = _config.parametersSystem.centerFrequency
         phyStation.txPower = _config.parametersSystem.txPowerUT
@@ -105,14 +111,14 @@ class RemoteStation(wns.Node.Node):
 
         self.nl.addRoute("0.0.0.0", "0.0.0.0", "192.168.254.254", "wimax")
 
-        self.load = constanze.Node.ConstanzeComponent(self, "constanze")
+        self.load = constanze.node.ConstanzeComponent(self, "constanze")
         self.mobility = rise.Mobility.Component(node = self,
                                                 name = "mobility UT"+str(_id),
                                                 mobility = rise.Mobility.No(openwns.geometry.position.Position()))
 
 
 
-class RelayStation(wns.Node.Node):
+class RelayStation(openwns.node.Node):
     phy = None
     dll = None
     mobility = None
@@ -123,14 +129,16 @@ class RelayStation(wns.Node.Node):
 
         self.phy = None
         # create the WIMAX DLL
-        self.dll = Stations.RelayStation(self, _config, _id)
-        #self.dll.setStationID(_id)
+        self.dll = Stations.RelayStation(self, _config)
+        self.dll.setStationID(_id)
         phyStation = OFDMAStation([transceiver.receiver['FRS']], [transceiver.transmitter['FRS']],
+                                  eirpLimited = _config.eirpLimited,
                                   noOfAntenna = _config.parametersSystem.numberOfAntennaFRSRxTx,
-                                  arrayLayout = _config.arrayLayout)
+                                  arrayLayout = _config.arrayLayout,
+                                  positionErrorVariance = _config.positionErrorVariance)
         phyStation.txFrequency = _config.parametersSystem.centerFrequency
         phyStation.rxFrequency = _config.parametersSystem.centerFrequency
-        phyStation.txPower = _config.parametersSystem.txPowerUT
+        phyStation.txPower = _config.parametersSystem.txPowerFRS
         phyStation.numberOfSubCarrier = _config.parametersPhy.subchannels
         phyStation.bandwidth =  _config.parametersPhy.channelBandwidth
         phyStation.systemManagerName = 'ofdma'
@@ -144,7 +152,7 @@ class RelayStation(wns.Node.Node):
 
 
 
-class BaseStation(wns.Node.Node):
+class BaseStation(openwns.node.Node):
     phy = None
     dll = None
     mobility = None
@@ -158,8 +166,10 @@ class BaseStation(wns.Node.Node):
         self.dll = Stations.BaseStation(self, _config)
         self.dll.setStationID(_id)
         phyStation = OFDMAStation([transceiver.receiver['AP']], [transceiver.transmitter['AP']],
+                                  eirpLimited = _config.eirpLimited,
                                   noOfAntenna = _config.parametersSystem.numberOfAntennaAPRxTx,
-                                  arrayLayout = _config.arrayLayout)
+                                  arrayLayout = _config.arrayLayout,
+                                  positionErrorVariance = _config.positionErrorVariance)
         phyStation.txPower = _config.parametersSystem.txPowerAP
         phyStation.txFrequency = _config.parametersSystem.centerFrequency
         phyStation.rxFrequency = _config.parametersSystem.centerFrequency
@@ -174,7 +184,7 @@ class BaseStation(wns.Node.Node):
                                                 mobility = rise.Mobility.No(openwns.geometry.position.Position()))
 
 
-class RANG(wns.Node.Node):
+class RANG(openwns.node.Node):
     dll = None
     nl  = None
     load = None
@@ -200,6 +210,6 @@ class RANG(wns.Node.Node):
                        _dllDataTransmission = self.dll.dataTransmission,
                        _dllNotification = self.dll.notification)
 
-        self.load = constanze.Node.ConstanzeComponent(self, "constanze")
+        self.load = constanze.node.ConstanzeComponent(self, "constanze")
 
 

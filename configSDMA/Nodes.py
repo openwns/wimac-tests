@@ -1,5 +1,5 @@
 import math
-import openwns
+import openwns.geometry.position
 import openwns.node
 import constanze.traffic
 import rise.Mobility
@@ -25,7 +25,7 @@ class SubscriberStation(openwns.node.Node):
         transceiver = Transceiver(_config)
         self.phy = None
         # create the WIMAX DLL
-        self.dll = Stations.SubscriberStation(self, _config)
+        self.dll = Stations.SubscriberStation(self, _config)#, ring = 2)
         self.dll.setStationID(_id)
         phyStation = OFDMAStation([transceiver.receiver['UT']], [transceiver.transmitter['UT']],
                                   eirpLimited = _config.eirpLimited,
@@ -76,7 +76,7 @@ class RemoteStation(openwns.node.Node):
         transceiver = Transceiver(_config)
         self.phy = None
         # create the WIMAX DLL
-        self.dll = Stations.RemoteStation(self, _config)
+        self.dll = Stations.RemoteStation(self, _config)#, ring = 4)
         self.dll.setStationID(_id)
         phyStation = OFDMAStation([transceiver.receiver['UT']], [transceiver.transmitter['UT']],
                                   eirpLimited = _config.eirpLimited,
@@ -205,4 +205,5 @@ class RANG(openwns.node.Node):
                        _dllNotification = self.dll.notification)
 
         self.load = constanze.node.ConstanzeComponent(self, "constanze")
+
 

@@ -43,12 +43,38 @@ class BaseStation(Layer2):
         self.dlmapcollector = wimac.FrameBuilder.DLMapCollector('frameBuilder', 'dlscheduler')
         self.ulmapcollector = wimac.FrameBuilder.ULMapCollector('frameBuilder', 'ulscheduler')
         self.dlscheduler = wimac.FrameBuilder.DataCollector('frameBuilder')
+        
+        if config.oldPFScheduler:
+            strategy = openwns.Scheduler.ProportionalFairDL(historyWeight = 0.99,
+                                                        maxBursts = config.maxBursts,
+                                                        powerControlSlave = False)
+        else:
+            subStrategiesTXDL = []
+            subStrategiesTXDL =(
+                openwns.Scheduler.RoundRobin(), # for priority 0
+                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 1
+                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 2
+                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 3
+                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 4
+                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 5
+                openwns.Scheduler.ExhaustiveRoundRobin() # for priority 6
+            )
+            dsastrategy  = openwns.scheduler.DSAStrategy.LinearFFirst(oneUserOnOneSubChannel = False)
+            dsafbstrategy= openwns.scheduler.DSAStrategy.LinearFFirst(oneUserOnOneSubChannel = False)
+            apcstrategy  = openwns.scheduler.APCStrategy.UseNominalTxPower()          
+          
+            strategy = openwns.Scheduler.StaticPriority(
+                parentLogger = self.logger, 
+                txMode = True,  
+                subStrategies = subStrategiesTXDL, 
+                dsastrategy = dsastrategy, 
+                dsafbstrategy = dsafbstrategy, 
+                apcstrategy = apcstrategy)     
+        
         self.dlscheduler.txScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",
             config.parametersPhy.symbolDuration,
-            strategy = openwns.Scheduler.ProportionalFairDL(historyWeight = 0.99,
-                                                        maxBursts = config.maxBursts,
-                                                        powerControlSlave = False),
+            strategy,            
             freqChannels = config.parametersPhy.subchannels,
             maxBeams = config.maxBeams,
             beamforming = config.beamforming,
@@ -56,6 +82,7 @@ class BaseStation(Layer2):
             plotFrames = False,
             callback = wimac.Scheduler.DLCallback( beamforming = config.beamforming )
             )
+	self.dlscheduler.txScheduler.strategy.logger.enabled = True
 	self.ulContentionRNGc = wimac.FrameBuilder.ContentionCollector('frameBuilder', contentionAccess = wimac.FrameBuilder.ContentionCollector.ContentionAccess(False, 8, 3) )
         self.ulscheduler = wimac.FrameBuilder.DataCollector('frameBuilder')
         self.ulscheduler.rxScheduler = wimac.Scheduler.Scheduler(
@@ -72,6 +99,7 @@ class BaseStation(Layer2):
             plotFrames = False,
             uplink = True
             )
+	self.ulscheduler.rxScheduler.strategy.logger.enabled = True
         self.ulscheduler.rxScheduler.pseudoGenerator = \
             wimac.Scheduler.PseudoBWRequestGenerator('connectionManager',
                                                      'ulscheduler',

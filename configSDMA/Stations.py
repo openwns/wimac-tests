@@ -1,7 +1,8 @@
 from Layer2 import *
-import dll.UpperConvergence
+import wimac.CompoundSwitch
 import wimac.Scheduler
 import wimac.FUReseter
+import wimac.FUs
 import openwns.Tools
 import math
 from wimac.FrameBuilder import ActivationAction, OperationMode
@@ -19,34 +20,61 @@ class BaseStation(Layer2):
     subscriberStations = None
     relayStations = None
 
-    def __init__(self, node, config):
+    def __init__(self, node, config, registryProxy = wimac.Scheduler.RegistryProxyWiMAC):
         super(BaseStation, self).__init__(node, "BS", config)
         self.ring = 1
         self.qosCategory = 'NoQoS'
 
         # BaseStation specific components
-        self.upperconvergence = dll.UpperConvergence.AP()
+        self.upperconvergence = wimac.FUs.UpperConvergence()
         self.stationType = "AP"
 
         # control plane
-        self.rngCompoundSwitch = dll.CompoundSwitch.CompoundSwitch()
+        self.rngCompoundSwitch = wimac.CompoundSwitch.CompoundSwitch()
         self.rngCompoundSwitch.onDataFilters.append(
-            dll.CompoundSwitch.FilterAll('All') )
+            wimac.CompoundSwitch.FilterAll('All') )
         self.rngCompoundSwitch.sendDataFilters.append(
-            dll.CompoundSwitch.FilterNone('None') )
+            wimac.CompoundSwitch.FilterNone('None') )
         self.rngCompoundSwitch.sendDataFilters.append(
-            dll.CompoundSwitch.FilterAll('All') )
+            wimac.CompoundSwitch.FilterAll('All') )
 
         # frame elements
         self.framehead = wimac.FrameBuilder.FrameHeadCollector('frameBuilder')
         self.dlmapcollector = wimac.FrameBuilder.DLMapCollector('frameBuilder', 'dlscheduler')
         self.ulmapcollector = wimac.FrameBuilder.ULMapCollector('frameBuilder', 'ulscheduler')
         self.dlscheduler = wimac.FrameBuilder.DataCollector('frameBuilder')
+        
+        if config.oldPFScheduler:
+            strategy = openwns.Scheduler.ProportionalFairDL(historyWeight = 0.99,
+                                                        maxBursts = config.maxBursts,
+                                                        powerControlSlave = False)
+        else:
+            subStrategiesTXDL = []
+            subStrategiesTXDL =(
+                openwns.Scheduler.RoundRobin(), # for priority 0
+                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 1
+                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 2
+                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 3
+                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 4
+                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 5
+                openwns.Scheduler.ExhaustiveRoundRobin() # for priority 6
+            )
+            dsastrategy  = openwns.scheduler.DSAStrategy.LinearFFirst(oneUserOnOneSubChannel = False)
+            dsafbstrategy= openwns.scheduler.DSAStrategy.LinearFFirst(oneUserOnOneSubChannel = False)
+            apcstrategy  = openwns.scheduler.APCStrategy.UseNominalTxPower()          
+          
+            strategy = openwns.Scheduler.StaticPriority(
+                parentLogger = self.logger, 
+                txMode = True,  
+                subStrategies = subStrategiesTXDL, 
+                dsastrategy = dsastrategy, 
+                dsafbstrategy = dsafbstrategy, 
+                apcstrategy = apcstrategy)     
+        
         self.dlscheduler.txScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",
             config.parametersPhy.symbolDuration,
-            strategy = openwns.Scheduler.ProportionalFairDL(historyWeight = 0.99,
-                                                        maxBursts = config.maxBursts),
+            strategy,            
             freqChannels = config.parametersPhy.subchannels,
             maxBeams = config.maxBeams,
             beamforming = config.beamforming,
@@ -54,13 +82,15 @@ class BaseStation(Layer2):
             plotFrames = False,
             callback = wimac.Scheduler.DLCallback( beamforming = config.beamforming )
             )
-        self.ulContentionRNGc = wimac.FrameBuilder.ContentionCollector('frameBuilder', contentionAccess = wimac.FrameBuilder.ContentionCollector.ContentionAccess(False, 8, 3) )
+	self.dlscheduler.txScheduler.strategy.logger.enabled = True
+	self.ulContentionRNGc = wimac.FrameBuilder.ContentionCollector('frameBuilder', contentionAccess = wimac.FrameBuilder.ContentionCollector.ContentionAccess(False, 8, 3) )
         self.ulscheduler = wimac.FrameBuilder.DataCollector('frameBuilder')
         self.ulscheduler.rxScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",
             config.parametersPhy.symbolDuration,
             strategy = openwns.Scheduler.ProportionalFairUL(historyWeight = 0.99,
-                                                        maxBursts = config.maxBursts),
+                                                        maxBursts = config.maxBursts,
+                                                        powerControlSlave = False),
             freqChannels = config.parametersPhy.subchannels,
             maxBeams = config.maxBeams,
             beamforming =  config.beamforming,
@@ -69,6 +99,7 @@ class BaseStation(Layer2):
             plotFrames = False,
             uplink = True
             )
+	self.ulscheduler.rxScheduler.strategy.logger.enabled = True
         self.ulscheduler.rxScheduler.pseudoGenerator = \
             wimac.Scheduler.PseudoBWRequestGenerator('connectionManager',
                                                      'ulscheduler',
@@ -107,8 +138,8 @@ class BaseStation(Layer2):
         self.frameBuilder.connect(self.phyUser)
 
     def setupCompoundSwitch(self):
-        self.compoundSwitch.onDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
-        self.compoundSwitch.sendDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
+        self.compoundSwitch.onDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
+        self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
 
 
     def setupFrame(self, config):
@@ -197,9 +228,8 @@ class BaseStation(Layer2):
                                                    myFrameSetup.ulDataLength )
         self.frameBuilder.timingControl.addActivation( activation )
 
-        # this could be a pause, too
-        # but it might be exchanged by real compound collector in the future
-
+        # next activations could be a pause, too
+        # but they might be exchanged by real compound collector in the future
         activation = wimac.FrameBuilder.Activation('bwReq',
                                                    OperationMode( OperationMode.Pausing ),
                                                    ActivationAction( ActivationAction.Pause ),
@@ -216,19 +246,19 @@ class BaseStation(Layer2):
 
 
 class SubscriberStation(Layer2):
-
+    forwarder = None
 
     def __init__(self, node, config):
         super(SubscriberStation, self).__init__(node, "SS", config)
         # actually this can be 2 + 2*numberOfRingAssociated to (1. BS, 2. Relay, ...)
-        self.upperconvergence = dll.UpperConvergence.UT()
+        self.upperconvergence = wimac.FUs.UpperConvergence()
         self.stationType = "UT"
 
         # control plane
-        self.rngCompoundSwitch = dll.CompoundSwitch.CompoundSwitch()
-        self.rngCompoundSwitch.onDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
-	self.rngCompoundSwitch.sendDataFilters.append( dll.CompoundSwitch.FilterCommand('RNGCompounds', 'ranging') )
-	self.rngCompoundSwitch.sendDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
+        self.rngCompoundSwitch = wimac.CompoundSwitch.CompoundSwitch()
+        self.rngCompoundSwitch.onDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
+	self.rngCompoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterCommand('RNGCompounds', 'ranging') )
+	self.rngCompoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
 
         # frame elements
         self.framehead = wimac.FrameBuilder.FrameHeadCollector('frameBuilder')
@@ -282,9 +312,9 @@ class SubscriberStation(Layer2):
         self.frameBuilder.connect(self.phyUser)
 
     def setupCompoundSwitch(self):
-	self.compoundSwitch.onDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
-        self.compoundSwitch.sendDataFilters.append( dll.CompoundSwitch.FilterNone('None') )
-	self.compoundSwitch.sendDataFilters.append( dll.CompoundSwitch.FilterAll('All') )
+	self.compoundSwitch.onDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
+        self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterNone('None') )
+	self.compoundSwitch.sendDataFilters.append( wimac.CompoundSwitch.FilterAll('All') )
 
 
     def setupFrame(self, config):
