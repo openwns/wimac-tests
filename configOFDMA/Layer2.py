@@ -111,7 +111,7 @@ class Layer2(wimac.Component.Component):
                                lossRatioProbeName = "wimac.crc.CRCLossRatio",
                                CRCsize = config.parametersMAC.pduOverhead,
                                isDropping = False)
-        self.errormodelling = wimac.ErrorModelling.ErrorModelling('phyUser','phyUser',PrintMappings=False)
+        self.errormodelling = wimac.ErrorModeself.upperConvergenceNamelling.ErrorModelling('phyUser','phyUser',PrintMappings=False)
         self.compoundSwitch = wimac.CompoundSwitch.CompoundSwitch()
 
         self.phyUser = wimac.PhyUser.PhyUser(
@@ -126,7 +126,7 @@ class Layer2(wimac.Component.Component):
 
     def buildFUN(self, config):
         #DataPlane
-        self.upperconvergence = Node('upperConvergence', self.upperconvergence)
+        self.upperconvergence = Node(self.upperConvergenceName, self.upperconvergence)
         self.topTpProbe = Node('topTpProbe', self.topTpProbe)
         self.topPProbe = Node('topPProbe', self.topPProbe)
         self.bottomThroughputProbe = Node('bottomThroughputProbe', self.bottomThroughputProbe)

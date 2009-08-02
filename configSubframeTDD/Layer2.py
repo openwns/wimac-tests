@@ -126,7 +126,7 @@ class Layer2(wimac.Component.Component):
 
     def buildFUN(self, config):
         #DataPlane
-        self.upperconvergence = Node('upperConvergence', self.upperconvergence)
+        self.upperconvergence = Node(self.upperConvergenceName, self.upperconvergence)
         self.topTpProbe = Node('topTpProbe', self.topTpProbe)
         self.topPProbe = Node('topPProbe', self.topPProbe)
         self.bottomThroughputProbe = Node('bottomThroughputProbe', self.bottomThroughputProbe)
