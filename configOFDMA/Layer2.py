@@ -12,12 +12,12 @@ import wimac.KeyBuilder
 from wns.FUN import FUN, Node
 from wns.FlowSeparator import FlowSeparator
 
-import wns.Probe
-import wns.Buffer
-import wns.ARQ
-import wns.SAR
-import wns.Tools
-import wns.FCF
+import openwns.Probe
+import openwns.Buffer
+import openwns.ARQ
+import openwns.SAR
+import openwns.Tools
+import openwns.FCF
 import wimac.CompoundSwitch
 import wimac.Relay
 import dll.UpperConvergence
@@ -79,7 +79,7 @@ class Layer2(dll.Layer2.Layer2):
 
         self.associations = []
         self.randomStartDelayMax = 0.0
-        self.frameBuilder = wns.FCF.FrameBuilder(0, wimac.FrameBuilder.TimingControl(),
+        self.frameBuilder = openwns.FCF.FrameBuilder(0, wimac.FrameBuilder.TimingControl(),
             frameDuration = config.parametersPhy.frameDuration,
             symbolDuration = config.parametersPhy.symbolDuration )
         
@@ -113,7 +113,7 @@ class Layer2(dll.Layer2.Layer2):
 
         self.branchDispatcher = wns.ldk.Multiplexer.Dispatcher(opcodeSize = 0)
         # size of CRC command is abused to model overhead due to entire MAC header (48 bit without CRC)
-        self.crc = wns.CRC.CRC("errormodelling",
+        self.crc = openwns.CRC.CRC("errormodelling",
                                lossRatioProbeName = "wimac.crc.CRCLossRatio",
                                CRCsize = config.parametersMAC.pduOverhead,
                                isDropping = False)
