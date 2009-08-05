@@ -51,13 +51,7 @@ class BaseStation(Layer2):
         else:
             subStrategiesTXDL = []
             subStrategiesTXDL =(
-                openwns.Scheduler.RoundRobin(), # for priority 0
-                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 1
-                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 2
-                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 3
-                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 4
-                openwns.Scheduler.ExhaustiveRoundRobin(), # for priority 5
-                openwns.Scheduler.ExhaustiveRoundRobin() # for priority 6
+                openwns.Scheduler.ExhaustiveRoundRobin(), # for default priority 0
             )
             dsastrategy  = openwns.scheduler.DSAStrategy.LinearFFirst(oneUserOnOneSubChannel = False)
             dsafbstrategy= openwns.scheduler.DSAStrategy.LinearFFirst(oneUserOnOneSubChannel = False)
