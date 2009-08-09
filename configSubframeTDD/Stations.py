@@ -50,9 +50,13 @@ class BaseStation(Layer2):
         self.dlscheduler = wimac.FrameBuilder.DataCollector('frameBuilder')
         
         if config.oldPFScheduler:
-            strategy = openwns.Scheduler.ProportionalFairDL(historyWeight = 0.99,
+            strategyDL = openwns.Scheduler.ProportionalFairDL(historyWeight = 0.99,
                                                         maxBursts = config.maxBursts,
                                                         powerControlSlave = False)
+                                                        
+            strategyUL = openwns.Scheduler.ProportionalFairUL(historyWeight = 0.99,
+                                                        maxBursts = config.maxBursts,
+                                                        powerControlSlave = False),                                                        
         else:
             subStrategiesTXDL = []
             subStrategiesTXDL =(
@@ -62,18 +66,20 @@ class BaseStation(Layer2):
             dsafbstrategy= openwns.scheduler.DSAStrategy.LinearFFirst(oneUserOnOneSubChannel = False)
             apcstrategy  = openwns.scheduler.APCStrategy.UseNominalTxPower()          
           
-            strategy = openwns.Scheduler.StaticPriority(
+            strategyDL = openwns.Scheduler.StaticPriority(
                 parentLogger = self.logger, 
                 txMode = True,  
                 subStrategies = subStrategiesTXDL, 
                 dsastrategy = dsastrategy, 
                 dsafbstrategy = dsafbstrategy, 
                 apcstrategy = apcstrategy)     
+                
+            strategyUL = strategyDL    
         
         self.dlscheduler.txScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",
             config.parametersPhy.symbolDuration,
-            strategy,            
+            strategyDL,            
             freqChannels = config.parametersPhy.subchannels,
             maxBeams = config.maxBeams,
             beamforming = config.beamforming,
@@ -88,9 +94,7 @@ class BaseStation(Layer2):
         self.ulscheduler.rxScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",
             config.parametersPhy.symbolDuration,
-            strategy = openwns.Scheduler.ProportionalFairUL(historyWeight = 0.99,
-                                                        maxBursts = config.maxBursts,
-                                                        powerControlSlave = False),
+            strategy = strategyUL,
             freqChannels = config.parametersPhy.subchannels,
             maxBeams = config.maxBeams,
             beamforming =  config.beamforming,
