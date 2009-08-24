@@ -17,9 +17,10 @@ from ip.VirtualDNS import VirtualDNSServer
 import ofdmaphy.OFDMAPhy
 import rise.Scenario
 import rise.Mobility
-from constanze.node import IPBinding, IPListenerBinding, Listener
 from openwns.pyconfig import Frozen
 from openwns.pyconfig import Sealed
+from openwns.geometry.position import Position
+from constanze.Node import IPBinding, IPListenerBinding, Listener
 
 import Nodes
 import Layer2

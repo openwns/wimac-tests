@@ -28,18 +28,18 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                            disabledReason = "",
                                            workingDir = 'configBase')
 
-#checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_PDF.dat',
-#                                              ['probe.trials == 10', 'probe.mean == 9480000.0'],
-#                                              'dbg')
+checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_PDF.dat',
+                                              ['probe.trials == 10', 'probe.mean == 8964000.0'],
+                                              'dbg')
 
 
-#testSuite.addTest(checkULThroughput)
+testSuite.addTest(checkULThroughput)
 
-#checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_PDF.dat',
-#                                              ['probe.trials == 10', 'probe.mean == 4202800.0'],
-#                                              'dbg')
+checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_PDF.dat',
+                                              ['probe.trials == 10', 'probe.mean == 4448800.0'],
+                                              'dbg')
 
-#testSuite.addTest(checkDLThroughput)
+testSuite.addTest(checkDLThroughput)
 
 wimacTestSuite.addTest(testSuite)
 
@@ -98,7 +98,16 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
 wimacTestSuite.addTest(testSuite)
 
 
-testSuite = wimacTestSuite
+testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'config.py',
+                                           shortDescription = 'Basic test with scheduler bypass queue',
+                                           requireReferenceOutput = False,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configBypass')
+
+wimacTestSuite.addTest(testSuite)
 
 if __name__ == '__main__':
     # This is only evaluated if the script is called by hand
