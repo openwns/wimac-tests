@@ -44,6 +44,19 @@ testSuite.addTest(checkDLThroughput)
 wimacTestSuite.addTest(testSuite)
 
 ##################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- Base Test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'config.py',
+                                           shortDescription = 'WiMAC: Two SSs with different PHY modes',
+                                           requireReferenceOutput = False,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configTDMA')
+
+wimacTestSuite.addTest(testSuite)
+
+##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- SDMA Test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
