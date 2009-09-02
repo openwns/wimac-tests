@@ -61,9 +61,9 @@ class Config(Frozen):
     eirpLimited = False
     positionErrorVariance = 0.0
 
-    packetSize = 3000 #in bit
-    trafficUL = 1000000 # bit/s per station
-    trafficDL = 1000000
+    packetSize = 100 #in bit
+    trafficUL = 5000000 # bit/s per station
+    trafficDL = 5000000
 
     oldPFScheduler = False
 
@@ -92,7 +92,7 @@ assert Config.nSSs == 1 or Config.nSSs == 2, "Only 1 or 2 SSs possible"
 
 # create an instance of the WNS configuration
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 0.1 # seconds
+WNS.maxSimTime = 1 # seconds
 
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = True
@@ -193,7 +193,7 @@ print "BSPos:" + str(bsPos)
 print "UT1Pos:" + str(userTerminals[0].mobility.mobility.getCoords())
 
 if Config.nSSs == 2:
-    userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1700,0,0))
+    userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1600,0,0))
     print "UT2Pos:" + str(userTerminals[1].mobility.mobility.getCoords())
 
 # Here we specify the stations we want to probe.
@@ -246,6 +246,10 @@ for src in sources:
                                                     resolution =  100))
 
 openwns.evaluation.default.installEvaluation(WNS)
+
+#Warp2Gui Probe
+node = openwns.evaluation.createSourceNode(WNS, "wimac.guiProbe")
+node.appendChildren(openwns.evaluation.generators.TextTrace("guiText", ""))
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")
