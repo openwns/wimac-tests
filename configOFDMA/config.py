@@ -17,10 +17,9 @@ from ip.VirtualDNS import VirtualDNSServer
 import ofdmaphy.OFDMAPhy
 import rise.Scenario
 import rise.Mobility
+from constanze.node import IPBinding, IPListenerBinding, Listener
 from openwns.pyconfig import Frozen
 from openwns.pyconfig import Sealed
-from openwns.geometry.position import Position
-from constanze.Node import IPBinding, IPListenerBinding, Listener
 
 import Nodes
 import Layer2
@@ -62,9 +61,9 @@ class Config(Frozen):
     eirpLimited = False
     positionErrorVariance = 0.0
 
-    packetSize = 3000 #in bit
-    trafficUL = 10000000 # bit/s per station
-    trafficDL = 1000000
+    packetSize = 100 #in bit
+    trafficUL = 5000000 # bit/s per station
+    trafficDL = 5000000
 
     oldPFScheduler = False
 
@@ -85,19 +84,18 @@ class Config(Frozen):
     writeOutput = True
     operationModeRelays = 'SDM' #'TDM' 'FDM'
 
-#config = Config()
 ####################################################
 # General Simulation settings                      #
 ####################################################
 
+assert Config.nSSs == 1 or Config.nSSs == 2, "Only 1 or 2 SSs possible"
+
 # create an instance of the WNS configuration
-# The variable must be called WNS!!!!
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 0.1 # seconds
-#Probe settings
+WNS.maxSimTime = 1 # seconds
+
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = True
-#WNS.masterLogger.loggerChain = [ wns.Logger.FormatOutputPair( wns.Logger.Console(), wns.Logger.File()) ]
 WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
 WNS.statusWriteInterval = 30 # in seconds
 WNS.probesWriteInterval = 30 # in seconds
@@ -111,11 +109,8 @@ riseConfig.debug.transmitter = False
 riseConfig.debug.main = False
 riseConfig.debug.antennas = False
 
-# from ./modules/phy/OFDMAPhy--unstable--0.3/PyConfig/ofdmaphy/OFDMAPhy.py
-#scenario = rise.scenario.Hexagonal.Hexagonal(config.clusterSize, config.center, config.numOfCircles, config.cellRadius, config.numRN, nUT, config.distanceBetweenBSs, config.distanceBetweenBSandRN, nSectorsBS=1, corrAngle=0.0, rnShiftAngle=config.RN_Shift_Angle, useWraparound = config.useWraparound)
 ofdmaPhyConfig = WNS.modules.ofdmaPhy
 ofdmaPhySystem = ofdmaphy.OFDMAPhy.OFDMASystem('ofdma')
-#ofdmaPhySystem.Scenario = rise.Scenario.Scenario(Config.scenarioXSize, Config.scenarioYSize)
 ofdmaPhySystem.Scenario = rise.Scenario.Scenario()
 ofdmaPhyConfig.systems.append(ofdmaPhySystem)
 
@@ -162,13 +157,20 @@ k = 0
 for bs in accessPoints:
     for i in xrange(Config.nSSs):
         ss = Nodes.SubscriberStation(stationIDs.next(), Config)
-        cbrDL = constanze.traffic.Poisson(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
+        poisDL = constanze.traffic.Poisson(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
         ipBinding = IPBinding(rang.nl.domainName, ss.nl.domainName)
-        rang.load.addTraffic(ipBinding, cbrDL)
+        rang.load.addTraffic(ipBinding, poisDL)
 
-        cbrUL = constanze.traffic.Poisson(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
+        if Config.trafficUL > 0.0:
+            poisUL = constanze.traffic.Poisson(offset = 0.0, 
+                                            throughput = Config.trafficUL, 
+                                            packetSize = Config.packetSize)
+        else:
+            # Send one PDU to establish connection
+            poisUL = constanze.traffic.CBR0(duration = 1E-6)                                            
+            
         ipBinding = IPBinding(ss.nl.domainName, rang.nl.domainName)
-        ss.load.addTraffic(ipBinding, cbrUL)
+        ss.load.addTraffic(ipBinding, poisUL)
         ipListenerBinding = IPListenerBinding(ss.nl.domainName)
         listener = Listener(ss.nl.domainName + ".listener")
         ss.load.addListener(ipListenerBinding, listener)
@@ -179,98 +181,22 @@ for bs in accessPoints:
     rang.dll.addAP(bs)
     k += 1
 
-# each access point is connected to some fixed relay stations
-k = 0
-relayStations = []
-for bs in accessPoints:
-    l = 0
-    for i in xrange(Config.nRSs):
-        rs = Nodes.RelayStation(stationIDs.next(), Config)
-        rs.dll.associate(bs.dll)
-        associations[rs]=[]
-        associations[bs].append(rs)
-        relayStations.append(rs)
-        WNS.simulationModel.nodes.append(rs)
-
-        l += 1
-    k += 1
-
-# each relay station is connected to some remote stations
-remoteStations = []
-k = 0
-for bs in accessPoints:
-    l = 0
-    for rs in associations[bs]:
-        if rs.dll.stationType != 'FRS':
-            continue
-        i = 0
-        for i in xrange(Config.nRmSs):
-            ss = Nodes.SubscriberStation(stationIDs.next(), Config)
-            ss.dll.logger.level = 2
-            cbrDL = constanze.traffic.CBR(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
-            ipBinding = IPBinding(rang.nl.domainName, ss.nl.domainName)
-            rang.load.addTraffic(ipBinding, cbrDL)
-
-            cbrUL = constanze.traffic.CBR(offset = 0.0, throughput = Config.trafficUL, packetSize = Config.packetSize)
-            ipBinding = IPBinding(ss.nl.domainName, rang.nl.domainName)
-            ss.load.addTraffic(ipBinding, cbrUL)
-            ipListenerBinding = IPListenerBinding(ss.nl.domainName)
-            listener = Listener(ss.nl.domainName + ".listener")
-            ss.load.addListener(ipListenerBinding, listener)
-
-            ss.dll.associate(rs.dll)
-            # 192.168.1.254 = "nl address of RANG" = rang.nl.address ?
-            associations[rs].append(ss)
-            remoteStations.append(ss)
-            WNS.simulationModel.nodes.append(ss)
-        l += 1
-    k += 1
-
 WNS.simulationModel.nodes.append(rang)
 
 # Positions of the stations are determined here
 setupRelayScenario(Config, WNS.simulationModel.nodes, associations)
 
-#set mobility
-intracellMobility = False
-
-if(intracellMobility):
-
-    for ss in userTerminals:
-        associatedBS = None
-        for bs in accessPoints:
-            if bs.dll.stationID == ss.dll.associateTo:
-                associatedBS = bs
-                bsPos = associatedBS.mobility.mobility.getCoords()
-                break
-        if associatedBS == None:
-            print 'no associated BS found'
-            exit(1)
-
-        # too large, SS might be outside the hexagon
-        maxDistance_ = Config.parametersSystem.cellRadius
-        # too small, corners are not filled
-        # maxDistance_ = (math.sqrt(3.0)/2.0) * Config.parametersSystem.cellRadius
-        # equal area
-        # maxDistance_ = math.sqrt( 3.0/2.0/math.pi*math.sqrt(3.0)) * Config.parametersSystem.cellRadius
-        ss.mobility.mobility = rise.Mobility.BrownianCirc(center=bsPos,
-                                                          maxDistance = maxDistance_ )
-
 bsPos =  accessPoints[0].mobility.mobility.getCoords()
 
 userTerminals[0].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(10,0,0))
-userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1700,0,0))
 print "BSPos:" + str(bsPos)
 print "UT1Pos:" + str(userTerminals[0].mobility.mobility.getCoords())
-print "UT2Pos:" + str(userTerminals[1].mobility.mobility.getCoords())
 
-# TODO: for multihop simulations: replicate the code for remote stations
-
-#plotStations.plot()
-
+if Config.nSSs == 2:
+    userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1600,0,0))
+    print "UT2Pos:" + str(userTerminals[1].mobility.mobility.getCoords())
 
 # Here we specify the stations we want to probe.
-# This is usually only the center cell with the BS and its associated stations.
 loggingStationIDs = []
 
 for st in associations[accessPoints[0]]:
@@ -282,8 +208,6 @@ for st in associations[accessPoints[0]]:
 
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
-
-#wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
 
 sources = ["wimac.top.window.incoming.bitThroughput", 
             "wimac.top.window.aggregated.bitThroughput", 
@@ -321,11 +245,11 @@ for src in sources:
                                                     maxXValue = 1.0,
                                                     resolution =  100))
 
-
-#symbolsInFrame = Config.parametersPhy.symbolsFrame
-#wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, symbolsInFrame, [1], loggingStationIDs)
-
 openwns.evaluation.default.installEvaluation(WNS)
+
+#Warp2Gui Probe
+node = openwns.evaluation.createSourceNode(WNS, "wimac.guiProbe")
+node.appendChildren(openwns.evaluation.generators.TextTrace("guiText", ""))
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")
@@ -341,12 +265,4 @@ WNS.simulationModel.nodes.append(vdns)
 
 WNS.simulationModel.nodes.append(vdhcp)
 
-### PostProcessor ###
-postProcessor = PostProcessor.WiMACPostProcessor()
-postProcessor.Config = Config
-postProcessor.accessPoints = accessPoints
-postProcessor.relayStations = relayStations
-postProcessor.userTerminals = userTerminals
-postProcessor.remoteStations = remoteStations
-WNS.addPostProcessing(postProcessor)
 openwns.setSimulator(WNS)

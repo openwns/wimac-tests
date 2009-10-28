@@ -22,6 +22,8 @@ class BaseStation(Layer2):
 
     def __init__(self, node, config, registryProxy = wimac.Scheduler.RegistryProxyWiMAC):
         super(BaseStation, self).__init__(node, "BS", config)
+        myFrameSetup = FrameSetup.FrameSetup(config)
+        
         self.ring = 1
         self.qosCategory = 'NoQoS'
 
@@ -55,10 +57,10 @@ class BaseStation(Layer2):
         else:
             subStrategiesTXDL = []
             subStrategiesTXDL =(
-                openwns.Scheduler.ExhaustiveRoundRobin(), # for default priority 0
+                openwns.Scheduler.ProportionalFair(), # for default priority 0
             )
-            dsastrategy  = openwns.scheduler.DSAStrategy.LinearFFirst(oneUserOnOneSubChannel = False)
-            dsafbstrategy= openwns.scheduler.DSAStrategy.LinearFFirst(oneUserOnOneSubChannel = False)
+            dsastrategy  = openwns.scheduler.DSAStrategy.LinearFFirst(oneUserOnOneSubChannel = True)
+            dsafbstrategy= openwns.scheduler.DSAStrategy.LinearFFirst(oneUserOnOneSubChannel = True)
             apcstrategy  = openwns.scheduler.APCStrategy.UseNominalTxPower()          
           
             strategyDL = openwns.Scheduler.StaticPriority(
@@ -80,10 +82,13 @@ class BaseStation(Layer2):
             beamforming = config.beamforming,
             friendliness_dBm = config.friendliness_dBm,
             plotFrames = False,
-            callback = wimac.Scheduler.DLCallback( beamforming = config.beamforming )
+            callback = wimac.Scheduler.DLCallback( beamforming = config.beamforming, slotLength = myFrameSetup.dlDataLength / 5.0),
+            numberOfTimeSlots = 5
             )
-	self.dlscheduler.txScheduler.strategy.logger.enabled = True
-	self.ulContentionRNGc = wimac.FrameBuilder.ContentionCollector('frameBuilder', contentionAccess = wimac.FrameBuilder.ContentionCollector.ContentionAccess(False, 8, 3) )
+        self.dlscheduler.txScheduler.strategy.logger.enabled = True
+        self.dlscheduler.txScheduler.strategy.dsastrategy.logger.enabled = True
+        self.dlscheduler.txScheduler.strategy.dsafbstrategy.logger.enabled = True
+        self.ulContentionRNGc = wimac.FrameBuilder.ContentionCollector('frameBuilder', contentionAccess = wimac.FrameBuilder.ContentionCollector.ContentionAccess(False, 8, 3) )
         self.ulscheduler = wimac.FrameBuilder.DataCollector('frameBuilder')
         self.ulscheduler.rxScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",
@@ -93,11 +98,16 @@ class BaseStation(Layer2):
             maxBeams = config.maxBeams,
             beamforming =  config.beamforming,
             friendliness_dBm = config.friendliness_dBm,
-            callback = wimac.Scheduler.ULCallback(),
+            callback = wimac.Scheduler.ULCallback(slotLength = myFrameSetup.ulDataLength / 5.0),
             plotFrames = False,
-            uplink = True
+            uplink = True,
+            numberOfTimeSlots = 5
             )
-	self.ulscheduler.rxScheduler.strategy.logger.enabled = True
+        self.ulscheduler.rxScheduler.strategy.logger.enabled = True
+        self.ulscheduler.rxScheduler.strategy.dsastrategy.logger.enabled = True
+        self.ulscheduler.rxScheduler.strategy.dsafbstrategy.logger.enabled = True
+
+
         self.ulscheduler.rxScheduler.pseudoGenerator = \
             wimac.Scheduler.PseudoBWRequestGenerator('connectionManager',
                                                      'ulscheduler',
@@ -108,7 +118,7 @@ class BaseStation(Layer2):
         self.setupFrame(config)
         self.fun = FUN()
         self.buildFUN(config)
-	self.connect()
+        self.connect()
 
 
     def connect(self):
