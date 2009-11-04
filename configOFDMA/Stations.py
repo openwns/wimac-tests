@@ -71,7 +71,13 @@ class BaseStation(Layer2):
                 dsafbstrategy = dsafbstrategy, 
                 apcstrategy = apcstrategy)     
                 
-            strategyUL = strategyDL    
+            strategyUL = openwns.Scheduler.StaticPriority(
+                parentLogger = self.logger, 
+                txMode = False,  
+                subStrategies = subStrategiesTXDL, 
+                dsastrategy = dsastrategy, 
+                dsafbstrategy = dsafbstrategy, 
+                apcstrategy = apcstrategy)
         
         self.dlscheduler.txScheduler = wimac.Scheduler.Scheduler(
             "frameBuilder",

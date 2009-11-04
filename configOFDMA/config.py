@@ -47,6 +47,8 @@ class Config(Frozen):
     parametersMAC         = ParametersMAC
     parametersPropagation = ParametersPropagation
 
+    parametersPhy.subchannels = 1
+
     # WiMAC Layer2 forming
     beamforming = False
     maxBeams = 1
@@ -92,7 +94,7 @@ assert Config.nSSs == 1 or Config.nSSs == 2, "Only 1 or 2 SSs possible"
 
 # create an instance of the WNS configuration
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 1 # seconds
+WNS.maxSimTime = 0.1 # seconds
 
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = True
