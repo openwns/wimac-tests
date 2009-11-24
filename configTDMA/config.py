@@ -92,7 +92,7 @@ assert Config.nSSs == 1 or Config.nSSs == 2, "Only 1 or 2 SSs possible"
 
 # create an instance of the WNS configuration
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 1 # seconds
+WNS.maxSimTime = 1.0 # seconds
 
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = True
@@ -248,8 +248,8 @@ for src in sources:
 openwns.evaluation.default.installEvaluation(WNS)
 
 #Warp2Gui Probe
-node = openwns.evaluation.createSourceNode(WNS, "wimac.guiProbe")
-node.appendChildren(openwns.evaluation.generators.TextTrace("guiText", ""))
+#node = openwns.evaluation.createSourceNode(WNS, "wimac.guiProbe")
+#node.appendChildren(openwns.evaluation.generators.TextTrace("guiText", ""))
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")

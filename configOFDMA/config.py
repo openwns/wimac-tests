@@ -47,7 +47,7 @@ class Config(Frozen):
     parametersMAC         = ParametersMAC
     parametersPropagation = ParametersPropagation
 
-    parametersPhy.subchannels = 1
+    parametersPhy.subchannels = 2
 
     # WiMAC Layer2 forming
     beamforming = False

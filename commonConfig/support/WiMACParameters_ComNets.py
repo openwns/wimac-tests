@@ -212,6 +212,10 @@ class ParametersOFDM(Frozen):
     # (verified 3)
     ######
 
+    slotDuration = 3.0 * symbolDuration
+    # [sec]   (Ts=Tb+Tg)
+    # (verified 3)
+    ######
     frameDuration = 0.010
     # [sec]   (Tf)
     ######
@@ -314,6 +318,8 @@ class ParametersOFDMA(Frozen):
     # [sec]   (Ts=Tb+Tg)
     # (verified 3)
     ######
+
+    slotDuration = 3 * symbolDuration
 
     frameDuration = 0.005
     # [sec]   (Tf)
