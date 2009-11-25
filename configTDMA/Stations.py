@@ -92,7 +92,7 @@ class BaseStation(Layer2):
             plotFrames = False,
             uplink = False,
             callback = wimac.Scheduler.DLCallback( beamforming = config.beamforming, slotLength = config.parametersPhy.slotDuration),
-            numberOfTimeSlots = 5
+            numberOfTimeSlots = config.numberOfTimeSlots
             )
         self.dlscheduler.txScheduler.strategy.logger.enabled = True
         self.dlscheduler.txScheduler.strategy.dsastrategy.logger.enabled = True
@@ -114,7 +114,7 @@ class BaseStation(Layer2):
             callback = wimac.Scheduler.ULMasterCallback(slotLength = config.parametersPhy.slotDuration),
             plotFrames = False,
             uplink = True,
-            numberOfTimeSlots = 5
+            numberOfTimeSlots = config.numberOfTimeSlots
             )
         self.ulscheduler.rxScheduler.strategy.logger.enabled = True
         self.ulscheduler.rxScheduler.strategy.dsastrategy.logger.enabled = True
@@ -318,7 +318,7 @@ class SubscriberStation(Layer2):
             callback = wimac.Scheduler.ULSlaveCallback(slotLength = config.parametersPhy.slotDuration),
             plotFrames = False,
             uplink = True,
-            numberOfTimeSlots = 5
+            numberOfTimeSlots = config.numberOfTimeSlots
             )
 	self.ulscheduler.txScheduler.strategy.logger.enabled = True
         self.ulscheduler.txScheduler.strategy.dsastrategy.logger.enabled = True

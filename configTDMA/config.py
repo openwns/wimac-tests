@@ -46,7 +46,9 @@ class Config(Frozen):
     parametersPhy         = ParametersOFDM
     parametersMAC         = ParametersMAC
     parametersPropagation = ParametersPropagation
-
+ 
+    parametersPhy.slotDuration = 3.0 *  parametersPhy.symbolDuration
+    
     # WiMAC Layer2 forming
     beamforming = False
     maxBeams = 1
@@ -61,7 +63,7 @@ class Config(Frozen):
     eirpLimited = False
     positionErrorVariance = 0.0
 
-    packetSize = 100 #in bit
+    packetSize = 50 #in bit
     trafficUL = 5000000 # bit/s per station
     trafficDL = 5000000
 
@@ -83,6 +85,7 @@ class Config(Frozen):
 
     writeOutput = True
     operationModeRelays = 'SDM' #'TDM' 'FDM'
+    numberOfTimeSlots = 100
 
 ####################################################
 # General Simulation settings                      #
@@ -92,7 +95,7 @@ assert Config.nSSs == 1 or Config.nSSs == 2, "Only 1 or 2 SSs possible"
 
 # create an instance of the WNS configuration
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 1.0 # seconds
+WNS.maxSimTime = 0.2 # seconds
 
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = True
@@ -248,8 +251,8 @@ for src in sources:
 openwns.evaluation.default.installEvaluation(WNS)
 
 #Warp2Gui Probe
-#node = openwns.evaluation.createSourceNode(WNS, "wimac.guiProbe")
-#node.appendChildren(openwns.evaluation.generators.TextTrace("guiText", ""))
+node = openwns.evaluation.createSourceNode(WNS, "wimac.guiProbe")
+node.appendChildren(openwns.evaluation.generators.TextTrace("guiText", ""))
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")
