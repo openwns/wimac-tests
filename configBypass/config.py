@@ -65,10 +65,8 @@ class Config(Frozen):
 
 
     packetSize = 50 #in bit
-    trafficUL = 1000 # bit/s per station
-    trafficDL = 1000
-
-    oldPFScheduler = False
+    trafficUL = 1E6 # bit/s per station
+    trafficDL = 1
 
     nSectors = 1
     nCircles = 0
@@ -96,7 +94,7 @@ class Config(Frozen):
 # create an instance of the WNS configuration
 # The variable must be called WNS!!!!
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 500 # seconds
+WNS.maxSimTime = 0.0299 # seconds
 
 # Logger settings
 WNS.masterLogger.backtrace.enabled = False
@@ -107,6 +105,7 @@ WNS.masterLogger.enabled = True
 WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
 
 # Probe settings
+
 WNS.statusWriteInterval = 30 # in seconds
 WNS.probesWriteInterval = 30 # in seconds
 
@@ -186,13 +185,13 @@ for bs in accessPoints:
         ipBinding = IPBinding(rang.nl.domainName, ss.nl.domainName)
         rang.load.addTraffic(ipBinding, poisDL)
 
-        if Config.trafficUL > 0.0:
+        if False: #Config.trafficUL > 0.0:
             poisUL = constanze.traffic.Poisson(offset = 0.0, 
                                             throughput = Config.trafficUL, 
                                             packetSize = Config.packetSize)
         else:
             # Send one PDU to establish connection
-            poisUL = constanze.traffic.CBR0(duration = 1E-6)                                            
+            poisUL = constanze.traffic.CBR0(duration = 15E-3, packetSize = Config.packetSize, throughput = Config.trafficUL)
             
         ipBinding = IPBinding(ss.nl.domainName, rang.nl.domainName)
         ss.load.addTraffic(ipBinding, poisUL)
@@ -288,7 +287,7 @@ if(intracellMobility):
 bsPos =  accessPoints[0].mobility.mobility.getCoords()
 
 userTerminals[0].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(10,0,0))
-userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1700,0,0))
+userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(10,0,0))
 
 # TODO: for multihop simulations: replicate the code for remote stations
 
@@ -309,7 +308,8 @@ for st in associations[accessPoints[0]]:
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
 
-wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
+wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs)
+#wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
 
 
 

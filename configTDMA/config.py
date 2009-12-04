@@ -58,8 +58,8 @@ class Config(Frozen):
     positionErrorVariance = 0.0
 
     packetSize = 50 #in bit
-    trafficUL = 10000 #5000000 # bit/s per station
-    trafficDL = 1000 #5000000
+    trafficUL = 0 #5000000 # bit/s per station
+    trafficDL = 1E6 #5000000
 
     nSectors = 1
     nCircles = 0
@@ -162,7 +162,7 @@ for bs in accessPoints:
                                             packetSize = Config.packetSize)
         else:
             # Send one PDU to establish connection
-            poisUL = constanze.traffic.CBR0(duration = 1E-6)                                            
+            poisUL = constanze.traffic.CBR0(duration = 1E-6, packetSize = Config.packetSize)
             
         ipBinding = IPBinding(ss.nl.domainName, rang.nl.domainName)
         ss.load.addTraffic(ipBinding, poisUL)
@@ -188,7 +188,7 @@ print "BSPos:" + str(bsPos)
 print "UT1Pos:" + str(userTerminals[0].mobility.mobility.getCoords())
 
 if Config.nSSs == 2:
-    userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1600,0,0))
+    userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(10,0,0))
     print "UT2Pos:" + str(userTerminals[1].mobility.mobility.getCoords())
 
 # Here we specify the stations we want to probe.
@@ -204,55 +204,12 @@ for st in associations[accessPoints[0]]:
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
 
-sources = ["wimac.top.window.incoming.bitThroughput", 
-            "wimac.top.window.aggregated.bitThroughput", 
-            "wimac.cirSDMA",
-            "wimac.top.packet.incoming.delay",
-            "wimac.top.packet.incoming.size",
-            "wimac.top.packet.outgoing.size"]
-
-for src in sources:
-    
-    node = openwns.evaluation.createSourceNode(WNS, src)
-    nodeBS = node.appendChildren(openwns.evaluation.generators.Accept(
-                        by = 'MAC.StationType', ifIn = [1], suffix = "BS"))
-    #nodeRS = node.appendChildren(openwns.evaluation.generators.Accept(
-    #                    by = 'MAC.StationType', ifIn = [2], suffix = "RS"))
-    nodeUT = node.appendChildren(openwns.evaluation.generators.Accept(
-                        by = 'MAC.StationType', ifIn = [3], suffix = "UT"))
-    nodeBS.appendChildren(openwns.evaluation.generators.Separate(
-                        by = 'MAC.Id', forAll = [1], format = "Id%d"))                    
-    nodeUT.appendChildren(openwns.evaluation.generators.Separate(
-                        by = 'MAC.Id', forAll = loggingStationIDs, format = "Id%d"))
-                        
-    if src == "wimac.cirSDMA":
-        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
-                                                    minXValue = -100,
-                                                    maxXValue = 100,
-                                                    resolution =  2000))
-    elif "window" in src:                          
-        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
-                                                    minXValue = 0.0,
-                                                    maxXValue = 120.0e+6,
-                                                    resolution =  1000))
-                                        
-    elif "delay" in src:                          
-        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
-                                                    minXValue = 0.0,
-                                                    maxXValue = 0.1,
-                                                    resolution =  10000))
-                                        
-    elif "size" in src:                          
-        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
-                                                    minXValue = 0.0,
-                                                    maxXValue = 15000.0,
-                                                    resolution =  150))
-
 openwns.evaluation.default.installEvaluation(WNS)
+wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs)
 
 #Warp2Gui Probe
-node = openwns.evaluation.createSourceNode(WNS, "wimac.guiProbe")
-node.appendChildren(openwns.evaluation.generators.TextTrace("guiText", ""))
+#node = openwns.evaluation.createSourceNode(WNS, "wimac.guiProbe")
+#node.appendChildren(openwns.evaluation.generators.TextTrace("guiText", ""))
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")
