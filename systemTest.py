@@ -24,8 +24,8 @@ testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..'
                                            configFile = 'config.py',
                                            shortDescription = 'WiMAC: simple one on one',
                                            requireReferenceOutput = False,
-                                           disabled = False,
-                                           disabledReason = "",
+                                           disabled = True,
+                                           disabledReason = "Might be removed later",
                                            workingDir = 'configBase')
 
 checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_PDF.dat',
