@@ -5,7 +5,7 @@ import constanze.traffic
 import rise.Mobility
 import ip.Component
 
-from ofdmaphy.Station import OFDMAStation, OFDMAComponent
+from ofdmaphy.Station import OFDMABFStation, OFDMAComponent
 
 import Stations
 import wimac.Rang
@@ -27,11 +27,11 @@ class SubscriberStation(openwns.node.Node):
         # create the WIMAX DLL
         self.dll = Stations.SubscriberStation(self, _config)#, ring = 2)
         self.dll.setStationID(_id)
-        phyStation = OFDMAStation([transceiver.receiver['UT']], [transceiver.transmitter['UT']],
-                                  eirpLimited = _config.eirpLimited,
-                                  noOfAntenna = _config.parametersSystem.numberOfAntennaUTRxTx,
-                                  arrayLayout = _config.arrayLayout,
-                                  positionErrorVariance = _config.positionErrorVariance)
+        phyStation = OFDMABFStation([transceiver.receiver['UT']], [transceiver.transmitter['UT']],
+                                    eirpLimited = _config.eirpLimited,
+                                    noOfAntenna = _config.parametersSystem.numberOfAntennaUTRxTx,
+                                    arrayLayout = _config.arrayLayout,
+                                    positionErrorVariance = _config.positionErrorVariance)
         phyStation.txFrequency = _config.parametersSystem.centerFrequency
         phyStation.rxFrequency = _config.parametersSystem.centerFrequency
         phyStation.txPower = _config.parametersSystem.txPowerUT
@@ -78,11 +78,11 @@ class RemoteStation(openwns.node.Node):
         # create the WIMAX DLL
         self.dll = Stations.RemoteStation(self, _config)#, ring = 4)
         self.dll.setStationID(_id)
-        phyStation = OFDMAStation([transceiver.receiver['UT']], [transceiver.transmitter['UT']],
-                                  eirpLimited = _config.eirpLimited,
-                                  noOfAntenna = _config.parametersSystem.numberOfAntennaUTRxTx,
-                                  arrayLayout = _config.arrayLayout,
-                                  positionErrorVariance = _config.positionErrorVariance)
+        phyStation = OFDMABFStation([transceiver.receiver['UT']], [transceiver.transmitter['UT']],
+                                    eirpLimited = _config.eirpLimited,
+                                    noOfAntenna = _config.parametersSystem.numberOfAntennaUTRxTx,
+                                    arrayLayout = _config.arrayLayout,
+                                    positionErrorVariance = _config.positionErrorVariance)
         phyStation.txFrequency = _config.parametersSystem.centerFrequency
         phyStation.rxFrequency = _config.parametersSystem.centerFrequency
         phyStation.txPower = _config.parametersSystem.txPowerUT
@@ -126,11 +126,11 @@ class RelayStation(openwns.node.Node):
         # create the WIMAX DLL
         self.dll = Stations.RelayStation(self, _config)
         self.dll.setStationID(_id)
-        phyStation = OFDMAStation([transceiver.receiver['FRS']], [transceiver.transmitter['FRS']],
-                                  eirpLimited = _config.eirpLimited,
-                                  noOfAntenna = _config.parametersSystem.numberOfAntennaFRSRxTx,
-                                  arrayLayout = _config.arrayLayout,
-                                  positionErrorVariance = _config.positionErrorVariance)
+        phyStation = OFDMABFStation([transceiver.receiver['FRS']], [transceiver.transmitter['FRS']],
+                                    eirpLimited = _config.eirpLimited,
+                                    noOfAntenna = _config.parametersSystem.numberOfAntennaFRSRxTx,
+                                    arrayLayout = _config.arrayLayout,
+                                    positionErrorVariance = _config.positionErrorVariance)
         phyStation.txFrequency = _config.parametersSystem.centerFrequency
         phyStation.rxFrequency = _config.parametersSystem.centerFrequency
         phyStation.txPower = _config.parametersSystem.txPowerFRS
@@ -159,11 +159,11 @@ class BaseStation(openwns.node.Node):
         # create the WIMAC DLL
         self.dll = Stations.BaseStation(self, _config)
         self.dll.setStationID(_id)
-        phyStation = OFDMAStation([transceiver.receiver['AP']], [transceiver.transmitter['AP']],
-                                  eirpLimited = _config.eirpLimited,
-                                  noOfAntenna = _config.parametersSystem.numberOfAntennaAPRxTx,
-                                  arrayLayout = _config.arrayLayout,
-                                  positionErrorVariance = _config.positionErrorVariance)
+        phyStation = OFDMABFStation([transceiver.receiver['AP']], [transceiver.transmitter['AP']],
+                                    eirpLimited = _config.eirpLimited,
+                                    noOfAntenna = _config.parametersSystem.numberOfAntennaAPRxTx,
+                                    arrayLayout = _config.arrayLayout,
+                                    positionErrorVariance = _config.positionErrorVariance)
         phyStation.txPower = _config.parametersSystem.txPowerAP
         phyStation.txFrequency = _config.parametersSystem.centerFrequency
         phyStation.rxFrequency = _config.parametersSystem.centerFrequency
