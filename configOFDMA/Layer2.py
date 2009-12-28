@@ -10,7 +10,6 @@ import wimac.KeyBuilder
 from openwns.FUN import FUN, Node
 from openwns.FlowSeparator import FlowSeparator
 
-
 import openwns.Probe
 import openwns.Buffer
 import openwns.ARQ
@@ -18,6 +17,7 @@ import openwns.SAR
 import openwns.Tools
 import openwns.FCF
 import openwns.CRC
+import dll.CompoundSwitch
 import wimac.Component
 import wimac.Relay
 import wimac.FrameBuilder
@@ -112,7 +112,7 @@ class Layer2(wimac.Component.Component):
                                lossRatioProbeName = "wimac.crc.CRCLossRatio",
                                CRCsize = config.parametersMAC.pduOverhead,
                                isDropping = False)
-        self.errormodelling = wimac.ErrorModeself.upperConvergenceNamelling.ErrorModelling('phyUser','phyUser',PrintMappings=False)
+        self.errormodelling = wimac.ErrorModelling.ErrorModelling('phyUser','phyUser',PrintMappings=False)
         self.compoundSwitch = wimac.CompoundSwitch.CompoundSwitch()
 
         self.phyUser = wimac.PhyUser.PhyUser(

@@ -1,8 +1,3 @@
-import os
-import sys
-sys.path.append(os.path.join('.','commonConfig'))
-sys.path.append(os.path.join('..','commonConfig'))
-
 import rise
 import openwns.node
 import openwns
@@ -21,15 +16,14 @@ from constanze.node import IPBinding, IPListenerBinding, Listener
 from openwns.pyconfig import Frozen
 from openwns.pyconfig import Sealed
 
-import Nodes
-import Layer2
+import wimac.support.Nodes
 import wimac.KeyBuilder as CIDKeyBuilder
 import wimac.evaluation.default
 
-from support.WiMACParameters import ParametersSystem, ParametersOFDM, ParametersMAC, ParametersPropagation, ParametersPropagation_NLOS
-from support.scenarioSupport import setupRelayScenario
-from support.scenarioSupport import calculateScenarioRadius, numberOfAccessPointsForHexagonalScenario
-import support.PostProcessor as PostProcessor
+from wimac.support.WiMACParameters import ParametersSystem, ParametersOFDM, ParametersMAC, ParametersPropagation, ParametersPropagation_NLOS
+from wimac.support.scenarioSupport import setupRelayScenario
+from wimac.support.scenarioSupport import calculateScenarioRadius, numberOfAccessPointsForHexagonalScenario
+import wimac.support.PostProcessor as PostProcessor
 
 import random
 random.seed(7)
@@ -47,6 +41,8 @@ class Config(Frozen):
     parametersMAC         = ParametersMAC
     parametersPropagation = ParametersPropagation
 
+    parametersPhy.slotDuration = 3.0 *  parametersPhy.symbolDuration
+
     # WiMAC Layer2 forming
     beamforming = False
     maxBeams = 1
@@ -57,15 +53,13 @@ class Config(Frozen):
     dlStrategy = "ProportionalFairDL"
     ulStrategy = "ProportionalFairUL"
 
-    arrayLayout = "linear" #"circular"
+    arrayLayout = "circular" #"circular"
     eirpLimited = False
     positionErrorVariance = 0.0
 
-    packetSize = 3000 #in bit
-    trafficUL = 1000000 # bit/s per station
-    trafficDL = 1000000
-
-    oldPFScheduler = False
+    packetSize = 50 #in bit
+    trafficUL = 0 #5000000 # bit/s per station
+    trafficDL = 1E6 #5000000
 
     nSectors = 1
     nCircles = 0
@@ -83,6 +77,7 @@ class Config(Frozen):
 
     writeOutput = True
     operationModeRelays = 'SDM' #'TDM' 'FDM'
+    numberOfTimeSlots = 100
 
 ####################################################
 # General Simulation settings                      #
@@ -92,7 +87,7 @@ assert Config.nSSs == 1 or Config.nSSs == 2, "Only 1 or 2 SSs possible"
 
 # create an instance of the WNS configuration
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 0.1 # seconds
+WNS.maxSimTime = 500 # seconds
 
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = True
@@ -124,7 +119,7 @@ WNS.modules.wimac.parametersPHY = Config.parametersPhy
 ### Instantiating Nodes and setting Traffic        #
 ####################################################
 # one RANG
-rang = Nodes.RANG()
+rang = wimac.support.Nodes.RANG()
 
 # BSs with some SSs each
 
@@ -139,7 +134,7 @@ stationIDs = stationID()
 accessPoints = []
 
 for i in xrange(Config.nBSs):
-    bs = Nodes.BaseStation(stationIDs.next(), Config)
+    bs = wimac.support.Nodes.BaseStation(stationIDs.next(), Config)
     bs.dll.logger.level = 2
     accessPoints.append(bs)
     associations[bs]=[]
@@ -156,7 +151,7 @@ userTerminals = []
 k = 0
 for bs in accessPoints:
     for i in xrange(Config.nSSs):
-        ss = Nodes.SubscriberStation(stationIDs.next(), Config)
+        ss = wimac.support.Nodes.SubscriberStation(stationIDs.next(), Config)
         poisDL = constanze.traffic.Poisson(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
         ipBinding = IPBinding(rang.nl.domainName, ss.nl.domainName)
         rang.load.addTraffic(ipBinding, poisDL)
@@ -167,7 +162,7 @@ for bs in accessPoints:
                                             packetSize = Config.packetSize)
         else:
             # Send one PDU to establish connection
-            poisUL = constanze.traffic.CBR0(duration = 1E-6)                                            
+            poisUL = constanze.traffic.CBR0(duration = 1E-6, packetSize = Config.packetSize)
             
         ipBinding = IPBinding(ss.nl.domainName, rang.nl.domainName)
         ss.load.addTraffic(ipBinding, poisUL)
@@ -193,7 +188,7 @@ print "BSPos:" + str(bsPos)
 print "UT1Pos:" + str(userTerminals[0].mobility.mobility.getCoords())
 
 if Config.nSSs == 2:
-    userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1700,0,0))
+    userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(10,0,0))
     print "UT2Pos:" + str(userTerminals[1].mobility.mobility.getCoords())
 
 # Here we specify the stations we want to probe.
@@ -209,43 +204,12 @@ for st in associations[accessPoints[0]]:
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
 
-sources = ["wimac.top.window.incoming.bitThroughput", 
-            "wimac.top.window.aggregated.bitThroughput", 
-            "wimac.cirSDMA",
-            "wimac.top.packet.incoming.delay"]
-
-for src in sources:
-    
-    node = openwns.evaluation.createSourceNode(WNS, src)
-    nodeBS = node.appendChildren(openwns.evaluation.generators.Accept(
-                        by = 'MAC.StationType', ifIn = [1], suffix = "BS"))
-    #nodeRS = node.appendChildren(openwns.evaluation.generators.Accept(
-    #                    by = 'MAC.StationType', ifIn = [2], suffix = "RS"))
-    nodeUT = node.appendChildren(openwns.evaluation.generators.Accept(
-                        by = 'MAC.StationType', ifIn = [3], suffix = "UT"))
-    nodeBS.appendChildren(openwns.evaluation.generators.Separate(
-                        by = 'MAC.Id', forAll = [1], format = "Id%d"))                    
-    nodeUT.appendChildren(openwns.evaluation.generators.Separate(
-                        by = 'MAC.Id', forAll = loggingStationIDs, format = "Id%d"))
-                        
-    if src == "wimac.cirSDMA":
-        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
-                                                    minXValue = -100,
-                                                    maxXValue = 100,
-                                                    resolution =  2000))
-    elif "window" in src:                          
-        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
-                                                    minXValue = 0.0,
-                                                    maxXValue = 120.0e+6,
-                                                    resolution =  1000))
-                                        
-    elif "packet" in src:                          
-        node.getLeafs().appendChildren(openwns.evaluation.generators.PDF(
-                                                    minXValue = 0.0,
-                                                    maxXValue = 1.0,
-                                                    resolution =  100))
-
 openwns.evaluation.default.installEvaluation(WNS)
+wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs)
+
+#Warp2Gui Probe
+#node = openwns.evaluation.createSourceNode(WNS, "wimac.guiProbe")
+#node.appendChildren(openwns.evaluation.generators.TextTrace("guiText", ""))
 
 # one Virtual ARP Zone
 varp = VirtualARPServer("vARP", "WIMAXRAN")
