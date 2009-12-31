@@ -63,10 +63,11 @@ class Config(Frozen):
     eirpLimited = False
     positionErrorVariance = 0.0
 
-
-    packetSize = 50 #in bit
-    trafficUL = 1E6 # bit/s per station
-    trafficDL = 1
+    packetSize = 240.0 # Max 240 if noIPHeader = True, else 80
+    trafficUL = 3E6 # bit/s per station
+    trafficDL = 3E6 # bit/s per station
+    noIPHeader = True #Set to true to set IP header to 0
+    probeWindowSize = 0.01 # Probe per frame
 
     nSectors = 1
     nCircles = 0
@@ -94,7 +95,7 @@ class Config(Frozen):
 # create an instance of the WNS configuration
 # The variable must be called WNS!!!!
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 0.0299 # seconds
+WNS.maxSimTime = 0.07999 # seconds
 
 # Logger settings
 WNS.masterLogger.backtrace.enabled = False
@@ -107,7 +108,7 @@ WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
 # Probe settings
 
 WNS.statusWriteInterval = 30 # in seconds
-WNS.probesWriteInterval = 30 # in seconds
+WNS.probesWriteInterval = 120 # in seconds
 
 
 ####################################################
@@ -137,6 +138,10 @@ WNS.modules.wimac.parametersPHY = Config.parametersPhy
 ####################################################
 # one RANG
 rang = wimac.support.Nodes.RANG()
+rang.nl.logger.level = 1
+                                        
+if Config.noIPHeader:
+    rang.nl.ipHeader.config.headerSize = 0
 
 # BSs with some SSs each
 
@@ -156,8 +161,12 @@ for i in xrange(Config.nBSs):
     # Use the Bypass Queue
     # DL Master
     bs.dll.dlscheduler.config.txScheduler.queue = wimac.Scheduler.BypassQueue()
-    # UL Master
-    #bs.dll.ulscheduler.config.rxScheduler.queue = wimac.Scheduler.BypassQueue()
+    
+    bs.dll.topTpProbe.config.windowSize = Config.probeWindowSize
+    bs.dll.topTpProbe.config.sampleInterval = Config.probeWindowSize
+    
+    if Config.noIPHeader:
+        bs.dll.ulscheduler.config.rxScheduler.pseudoGenerator.pduOverhead -= 160
     
     bs.dll.logger.level = 2
     accessPoints.append(bs)
@@ -181,23 +190,37 @@ for bs in accessPoints:
         # UL Slave
         ss.dll.ulscheduler.config.txScheduler.queue = wimac.Scheduler.BypassQueue()
         
-        poisDL = constanze.traffic.Poisson(offset = 0.05, throughput = Config.trafficDL, packetSize = Config.packetSize)
-        ipBinding = IPBinding(rang.nl.domainName, ss.nl.domainName)
-        rang.load.addTraffic(ipBinding, poisDL)
+        ss.dll.topTpProbe.config.windowSize = Config.probeWindowSize
+        ss.dll.topTpProbe.config.sampleInterval = Config.probeWindowSize
+        
+        if Config.trafficDL > 0.0:
+            poisDL = constanze.traffic.Poisson(offset = 0.05, 
+                throughput = Config.trafficDL, 
+                packetSize = Config.packetSize)
+            ipBinding = IPBinding(rang.nl.domainName, ss.nl.domainName)
+            rang.load.addTraffic(ipBinding, poisDL)
 
-        if False: #Config.trafficUL > 0.0:
+        if Config.trafficUL > 0.0:
             poisUL = constanze.traffic.Poisson(offset = 0.0, 
                                             throughput = Config.trafficUL, 
                                             packetSize = Config.packetSize)
         else:
             # Send one PDU to establish connection
-            poisUL = constanze.traffic.CBR0(duration = 15E-3, packetSize = Config.packetSize, throughput = Config.trafficUL)
+            poisUL = constanze.traffic.CBR0(duration = 15E-3, 
+                                            packetSize = Config.packetSize, 
+                                            throughput = 1.0)
             
         ipBinding = IPBinding(ss.nl.domainName, rang.nl.domainName)
         ss.load.addTraffic(ipBinding, poisUL)
         ipListenerBinding = IPListenerBinding(ss.nl.domainName)
         listener = Listener(ss.nl.domainName + ".listener")
         ss.load.addListener(ipListenerBinding, listener)
+        
+        if Config.noIPHeader:
+            ss.nl.ipHeader.config.headerSize = 0
+        
+        ss.nl.logger.level = 1
+            
         ss.dll.associate(bs.dll)
         associations[bs].append(ss)
         userTerminals.append(ss)
@@ -287,7 +310,8 @@ if(intracellMobility):
 bsPos =  accessPoints[0].mobility.mobility.getCoords()
 
 userTerminals[0].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(10,0,0))
-userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(10,0,0))
+if Config.nSSs == 2:
+    userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1000,0,0))
 
 # TODO: for multihop simulations: replicate the code for remote stations
 
@@ -310,7 +334,10 @@ for st in associations[accessPoints[0]]:
 
 wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs)
 #wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
-
+wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS,
+                                                            720,
+                                                            [accessPoints[0].dll.stationID], 
+                                                            loggingStationIDs)
 
 
 openwns.evaluation.default.installEvaluation(WNS)
