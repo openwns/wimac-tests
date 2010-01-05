@@ -63,9 +63,9 @@ class Config(Frozen):
     eirpLimited = False
     positionErrorVariance = 0.0
 
-    packetSize = 240.0 # Max 240 if noIPHeader = True, else 80
-    trafficUL = 3E6 # bit/s per station
-    trafficDL = 3E6 # bit/s per station
+    packetSize = 239.0 # Max 240 if noIPHeader = True, else 80
+    trafficUL = 5E5 # bit/s per station
+    trafficDL = 5E5 # bit/s per station
     noIPHeader = True #Set to true to set IP header to 0
     probeWindowSize = 0.01 # Probe per frame
 
@@ -95,7 +95,7 @@ class Config(Frozen):
 # create an instance of the WNS configuration
 # The variable must be called WNS!!!!
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 0.07999 # seconds
+WNS.maxSimTime = 10.0 #0.07999 # seconds
 
 # Logger settings
 WNS.masterLogger.backtrace.enabled = False
@@ -108,7 +108,7 @@ WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
 # Probe settings
 
 WNS.statusWriteInterval = 30 # in seconds
-WNS.probesWriteInterval = 120 # in seconds
+WNS.probesWriteInterval = 300 # in seconds
 
 
 ####################################################
@@ -161,10 +161,21 @@ for i in xrange(Config.nBSs):
     # Use the Bypass Queue
     # DL Master
     bs.dll.dlscheduler.config.txScheduler.queue = wimac.Scheduler.BypassQueue()
+
+    # Use the Simple Queue
+    # UL Master
+    bs.dll.ulscheduler.config.rxScheduler.queue = openwns.Scheduler.SimpleQueue()
     
     bs.dll.topTpProbe.config.windowSize = Config.probeWindowSize
     bs.dll.topTpProbe.config.sampleInterval = Config.probeWindowSize
     
+    # We need PseudeBWRequests with the Bypass Queue
+    bs.dll.ulscheduler.config.rxScheduler.pseudoGenerator = wimac.Scheduler.PseudoBWRequestGenerator(
+                'connectionManager',
+                'ulscheduler',
+                _packetSize = Config.packetSize,
+                _pduOverhead = Config.parametersMAC.pduOverhead)
+
     if Config.noIPHeader:
         bs.dll.ulscheduler.config.rxScheduler.pseudoGenerator.pduOverhead -= 160
     
@@ -311,7 +322,7 @@ bsPos =  accessPoints[0].mobility.mobility.getCoords()
 
 userTerminals[0].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(10,0,0))
 if Config.nSSs == 2:
-    userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1000,0,0))
+    userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1700,0,0))
 
 # TODO: for multihop simulations: replicate the code for remote stations
 
@@ -334,11 +345,9 @@ for st in associations[accessPoints[0]]:
 
 wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs)
 #wimac.evaluation.default.installEvaluation(WNS, [1], loggingStationIDs)
-wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS,
-                                                            720,
-                                                            [accessPoints[0].dll.stationID], 
-                                                            loggingStationIDs)
 
+symbolsInFrame = Config.parametersPhy.symbolsFrame
+wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, symbolsInFrame, [accessPoints[0].dll.stationID], loggingStationIDs)
 
 openwns.evaluation.default.installEvaluation(WNS)
 

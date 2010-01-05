@@ -65,8 +65,8 @@ class Config(Frozen):
     positionErrorVariance = 0.0
 
     packetSize = 239.0 # Max 240 if noIPHeader = True, else 80
-    trafficUL = 0 # bit/s per station
-    trafficDL = 1E6 # bit/s per station
+    trafficUL = 5E5 # bit/s per station
+    trafficDL = 5E5 # bit/s per station
     noIPHeader = True #Set to true to set IP header to 0
     probeWindowSize = 0.01 # Probe per frame
 
@@ -96,7 +96,7 @@ class Config(Frozen):
 # create an instance of the WNS configuration
 # The variable must be called WNS!!!!
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 0.07999 # seconds
+WNS.maxSimTime = 10.0 #0.07999 # seconds
 
 # Logger settings
 WNS.masterLogger.backtrace.enabled = False
@@ -105,7 +105,7 @@ WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
 
 # Probe settings
 WNS.statusWriteInterval = 30 # in seconds
-WNS.probesWriteInterval = 120 # in seconds
+WNS.probesWriteInterval = 300 # in seconds
 
 
 ####################################################
@@ -154,19 +154,9 @@ accessPoints = []
 
 for i in xrange(Config.nBSs):
     bs = wimac.support.Nodes.BaseStation(stationIDs.next(), Config)
-                
-    # Use the QueueProxy
-    # UL Master
-    bs.dll.ulscheduler.config.rxScheduler.queue = openwns.Scheduler.QueueProxy(
-        "queueManager",
-        True,
-        bs.dll.ulscheduler.config.rxScheduler.strategy.logger)
     
     bs.dll.topTpProbe.config.windowSize = Config.probeWindowSize
     bs.dll.topTpProbe.config.sampleInterval = Config.probeWindowSize
-    
-    #if Config.noIPHeader:
-    #    bs.dll.ulscheduler.config.rxScheduler.pseudoGenerator.pduOverhead -= 160
     
     bs.dll.logger.level = 2
     accessPoints.append(bs)
@@ -279,10 +269,10 @@ for st in associations[accessPoints[0]]:
     if st.dll.stationType == 'UT':
         loggingStationIDs.append(st.dll.stationID)
 
-sources = ["wimac.top.window.incoming.bitThroughput", 
-             "wimac.top.window.aggregated.bitThroughput", 
-             "wimac.cirSDMA",
-             "wimac.top.packet.incoming.delay"]
+sources = [] #["wimac.top.window.incoming.bitThroughput", 
+             #"wimac.top.window.aggregated.bitThroughput", 
+             #"wimac.cirSDMA",
+             #"wimac.top.packet.incoming.delay"]
 
 for src in sources:
     
@@ -313,6 +303,7 @@ for src in sources:
                                                      maxXValue = 1.0,
                                                      resolution =  100))
 
+wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs)
 
 symbolsInFrame = Config.parametersPhy.symbolsFrame
 wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, symbolsInFrame, [1], loggingStationIDs)
