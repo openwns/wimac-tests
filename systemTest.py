@@ -19,108 +19,107 @@ wimacTestSuite = pywns.WNSUnit.TestSuite()
 
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- Base Test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+testSuite1 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
                                            configFile = 'config.py',
-                                           shortDescription = 'WiMAC: simple one on one',
-                                           requireReferenceOutput = False,
-                                           disabled = True,
-                                           disabledReason = "Might be removed later",
-                                           workingDir = 'configBase')
-
-checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_PDF.dat',
-                                              ['probe.trials == 10', 'probe.mean == 8964000.0'],
-                                              'dbg')
-
-
-testSuite.addTest(checkULThroughput)
-
-checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_PDF.dat',
-                                              ['probe.trials == 10', 'probe.mean == 4448800.0'],
-                                              'dbg')
-
-testSuite.addTest(checkDLThroughput)
-
-wimacTestSuite.addTest(testSuite)
-
-##################################################################################
-#~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- Base Test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
-                                           
-                                           configFile = 'config.py',
-                                           shortDescription = 'WiMAC: Two SSs with different PHY modes',
+                                           shortDescription = 'Two stations. One neer one far',
                                            requireReferenceOutput = False,
                                            disabled = False,
                                            disabledReason = "",
-                                           workingDir = 'configTDMA')
+                                           workingDir = 'configBase')
 
-wimacTestSuite.addTest(testSuite)
+#checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_PDF.dat',
+#                                              ['probe.trials == 10', 'probe.mean == 8964000.0'],
+#                                              'dbg')
+
+
+#testSuite1.addTest(checkULThroughput)
+
+#checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_PDF.dat',
+#                                              ['probe.trials == 10', 'probe.mean == 4448800.0'],
+#                                              'dbg')
+
+#testSuite1.addTest(checkDLThroughput)
+
+##################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- Base Test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+testSuite2 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'config.py',
+                                           shortDescription = 'Two stations. One neer one far',
+                                           requireReferenceOutput = False,
+                                           disabled = True,
+                                           disabledReason = "Needs work",
+                                           workingDir = 'configTDMA')
 
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- SDMA Test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+testSuite3 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
                                             configFile = 'config.py',
-                                            shortDescription = 'WiMAC: Test with SDMA Scheduler',
+                                            shortDescription = 'Test with SDMA Scheduler',
                                             requireReferenceOutput = False,
                                             disabled = True,
                                             disabledReason = "New schedulers do not support SDMA",
                                             workingDir = 'configSDMA')
 
-checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_PDF.dat',
-                                              ['probe.trials == 98', 'probe.mean == 10166857.1428571'],
-                                              'dbg')
+#checkULThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeUT_PDF.dat',
+#                                              ['probe.trials == 98', 'probe.mean == 10166857.1428571'],
+#                                              'dbg')
 
 
-testSuite.addTest(checkULThroughput)
+#testSuite.addTest(checkULThroughput)
 
-checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_PDF.dat',
-                                              ['probe.trials == 49', 'probe.mean == 18209567.3469388'],
-                                              'dbg')
+#checkDLThroughput = pywns.WNSUnit.Expectation('wimac.top.window.aggregated.bitThroughput_MAC.StationTypeBS_PDF.dat',
+#                                              ['probe.trials == 49', 'probe.mean == 18209567.3469388'],
+#                                              'dbg')
 
-testSuite.addTest(checkDLThroughput)
+#testSuite.addTest(checkDLThroughput)
 
-wimacTestSuite.addTest(testSuite)
 
 
 
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- Subframe TDD Test ~~~~~~~~~~~~~~~~~~~~~~~~~
-testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+testSuite4 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
                                            configFile = 'config.py',
-                                           shortDescription = 'WiMAC: Relay enhanced cell',
+                                           shortDescription = 'Relay enhanced cell',
                                            requireReferenceOutput = False,
                                            disabled = True,
                                            disabledReason = "Needs work and verification",
                                            workingDir = 'configSubframeTDD')
-# create a system test
-wimacTestSuite.addTest(testSuite)
+
 
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- OFDMA Test ~~~~~~~~~~~~~~~~~~~~~~~~~
-testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+testSuite5 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
                                            configFile = 'config.py',
-                                           shortDescription = 'WiMAC: Relay enhanced cell',
+                                           shortDescription = 'Using multiple subchannels',
                                            requireReferenceOutput = False,
                                            disabled = True,
                                            disabledReason = "OFDMA needs to be enabled",
                                            workingDir = 'configOFDMA')
-# create a system test
-wimacTestSuite.addTest(testSuite)
 
 
-testSuite = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+
+testSuite6 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
                                            configFile = 'config.py',
-                                           shortDescription = 'Basic test with scheduler bypass queue',
+                                           shortDescription = 'Same as basic test but with bypass queue',
                                            requireReferenceOutput = False,
                                            disabled = False,
                                            disabledReason = "",
                                            workingDir = 'configBypass')
 
-wimacTestSuite.addTest(testSuite)
+wimacTestSuite.addTest(testSuite1)
+wimacTestSuite.addTest(testSuite2)
+wimacTestSuite.addTest(testSuite3)
+wimacTestSuite.addTest(testSuite4)
+wimacTestSuite.addTest(testSuite5)
+wimacTestSuite.addTest(testSuite6)
+
 
 if __name__ == '__main__':
     # This is only evaluated if the script is called by hand
