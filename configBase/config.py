@@ -96,7 +96,7 @@ class Config(Frozen):
 # create an instance of the WNS configuration
 # The variable must be called WNS!!!!
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
-WNS.maxSimTime = 10.0 #0.07999 # seconds
+WNS.maxSimTime = 0.07999 # seconds
 
 # Logger settings
 WNS.masterLogger.backtrace.enabled = False
