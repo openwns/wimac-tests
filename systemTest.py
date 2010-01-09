@@ -13,7 +13,7 @@ sys.path.append(os.path.join('..', '..', '..', 'sandbox', 'default', 'lib', 'pyt
 import pywns.WNSUnit
 
 
-wimacTestSuite = pywns.WNSUnit.TestSuite()
+testSuite = pywns.WNSUnit.TestSuite()
 
 #### create the system Tests
 
@@ -113,12 +113,12 @@ testSuite6 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            disabledReason = "",
                                            workingDir = 'configBypass')
 
-wimacTestSuite.addTest(testSuite1)
-wimacTestSuite.addTest(testSuite2)
-wimacTestSuite.addTest(testSuite3)
-wimacTestSuite.addTest(testSuite4)
-wimacTestSuite.addTest(testSuite5)
-wimacTestSuite.addTest(testSuite6)
+testSuite.addTest(testSuite1)
+testSuite.addTest(testSuite2)
+testSuite.addTest(testSuite3)
+testSuite.addTest(testSuite4)
+testSuite.addTest(testSuite5)
+testSuite.addTest(testSuite6)
 
 
 if __name__ == '__main__':
