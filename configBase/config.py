@@ -64,7 +64,7 @@ class Config(Frozen):
     eirpLimited = False
     positionErrorVariance = 0.0
 
-    packetSize = 239.0 # Max 240 if noIPHeader = True, else 80
+    packetSize = 2400.0 # Max 240 if noIPHeader = True, else 80
     trafficUL = 5E5 # bit/s per station
     trafficDL = 5E5 # bit/s per station
     noIPHeader = True #Set to true to set IP header to 0

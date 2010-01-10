@@ -1,4 +1,4 @@
-#! /usr/bin/env python2.4
+#! /usr/bin/env python
 
 # this is needed, so that the script can be called from everywhere
 import os
@@ -23,7 +23,7 @@ testSuite1 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            
                                            configFile = 'config.py',
                                            shortDescription = 'Two stations. One neer one far',
-                                           requireReferenceOutput = False,
+                                           requireReferenceOutput = True,
                                            disabled = False,
                                            disabledReason = "",
                                            workingDir = 'configBase')
@@ -108,7 +108,7 @@ testSuite6 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            
                                            configFile = 'config.py',
                                            shortDescription = 'Same as basic test but with bypass queue',
-                                           requireReferenceOutput = False,
+                                           requireReferenceOutput = True,
                                            disabled = False,
                                            disabledReason = "",
                                            workingDir = 'configBypass')
@@ -133,5 +133,5 @@ if __name__ == '__main__':
     testRunner = pywns.WNSUnit.TextTestRunner()
 
     # Finally, run the tests.
-    for it in wimacTestSuite:
+    for it in testSuite:
        testRunner.run(it)

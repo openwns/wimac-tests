@@ -63,7 +63,7 @@ class Config(Frozen):
     eirpLimited = False
     positionErrorVariance = 0.0
 
-    packetSize = 239.0 # Max 240 if noIPHeader = True, else 80
+    packetSize = 240.0 # Max 240 if noIPHeader = True, else 80
     trafficUL = 5E5 # bit/s per station
     trafficDL = 5E5 # bit/s per station
     noIPHeader = True #Set to true to set IP header to 0
@@ -165,7 +165,20 @@ for i in xrange(Config.nBSs):
     # Use the Simple Queue
     # UL Master
     bs.dll.ulscheduler.config.rxScheduler.queue = openwns.Scheduler.SimpleQueue()
+            
+    # Bypass the Desegmentation FU
+    #for con in bs.dll.fun.connects:
+    #    if con.src.commandName == "deSegAndDeConcat":
+    #        bs.dll.fun.connects.remove(con)  
+    #for con in bs.dll.fun.connects:
+    #    if con.dst.commandName == "deSegAndDeConcat":            
+    #        bs.dll.fun.connects.remove(con)  
     
+    #bs.dll.bufferSep.connect(bs.dll.crc)  
+
+    bs.dll.subFUN.connects.pop(0)
+    bs.dll.group.bottom = "buffer"
+
     bs.dll.topTpProbe.config.windowSize = Config.probeWindowSize
     bs.dll.topTpProbe.config.sampleInterval = Config.probeWindowSize
     
@@ -200,6 +213,20 @@ for bs in accessPoints:
         # Use the Bypass Queue
         # UL Slave
         ss.dll.ulscheduler.config.txScheduler.queue = wimac.Scheduler.BypassQueue()
+        
+        # Bypass the Desegmentation FU
+#        for con in ss.dll.fun.connects:
+#            if con.src.commandName == "deSegAndDeConcat":
+#                ss.dll.fun.connects.remove(con)  
+#        for con in ss.dll.fun.connects:
+#            if con.dst.commandName == "deSegAndDeConcat":            
+#                ss.dll.fun.connects.remove(con)  
+        
+#        ss.dll.bufferSep.connect(ss.dll.crc)  
+        
+        ss.dll.subFUN.connects.pop(0)
+        ss.dll.group.bottom = "buffer"
+
         
         ss.dll.topTpProbe.config.windowSize = Config.probeWindowSize
         ss.dll.topTpProbe.config.sampleInterval = Config.probeWindowSize
