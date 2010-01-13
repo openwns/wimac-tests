@@ -10,12 +10,12 @@
 #  Common Statistics 
 #  Minimum: 7.2050157
 #  Maximum: 7.2050157
-#  Trials: 48
+#  Trials: 43
 #  Mean: 7.2050157
 # 
 #  Variance: 0.0000000
 #  Relative variance: 0.0000000
-#  Coefficient of variation: 0.0000001
+#  Coefficient of variation: 0.0000000
 #  Standard deviation: 0.0000000
 #  Relative standard deviation: 0.0000000
 # 
@@ -24,9 +24,9 @@
 #  2nd moment: 51.9122514
 #  3rd moment: 374.0285875
 # 
-#  Sum of all values: 345.8407543
-#  (Sum of all values)^2: 2491.7880695
-#  (Sum of all values)^3: 17953.3721978
+#  Sum of all values: 309.8156757
+#  (Sum of all values)^2: 2232.2268122
+#  (Sum of all values)^3: 16083.2292605
 # -----------------------------------------------------------
 # PDF statistics 
 #  Left border of x-axis: -100

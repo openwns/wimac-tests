@@ -161,20 +161,12 @@ for i in xrange(Config.nBSs):
     # Use the Bypass Queue
     # DL Master
     bs.dll.dlscheduler.config.txScheduler.queue = wimac.Scheduler.BypassQueue()
+    bs.dll.dlscheduler.config.txScheduler.alwaysAcceptIfQueueAccepts = True
 
     # Use the Simple Queue
     # UL Master
     bs.dll.ulscheduler.config.rxScheduler.queue = openwns.Scheduler.SimpleQueue()
-            
-    # Bypass the Desegmentation FU
-    #for con in bs.dll.fun.connects:
-    #    if con.src.commandName == "deSegAndDeConcat":
-    #        bs.dll.fun.connects.remove(con)  
-    #for con in bs.dll.fun.connects:
-    #    if con.dst.commandName == "deSegAndDeConcat":            
-    #        bs.dll.fun.connects.remove(con)  
-    
-    #bs.dll.bufferSep.connect(bs.dll.crc)  
+    bs.dll.ulscheduler.config.rxScheduler.alwaysAcceptIfQueueAccepts = True        
 
     bs.dll.subFUN.connects.pop(0)
     bs.dll.group.bottom = "buffer"
@@ -213,16 +205,8 @@ for bs in accessPoints:
         # Use the Bypass Queue
         # UL Slave
         ss.dll.ulscheduler.config.txScheduler.queue = wimac.Scheduler.BypassQueue()
+	ss.dll.ulscheduler.config.txScheduler.alwaysAcceptIfQueueAccepts = True
         
-        # Bypass the Desegmentation FU
-#        for con in ss.dll.fun.connects:
-#            if con.src.commandName == "deSegAndDeConcat":
-#                ss.dll.fun.connects.remove(con)  
-#        for con in ss.dll.fun.connects:
-#            if con.dst.commandName == "deSegAndDeConcat":            
-#                ss.dll.fun.connects.remove(con)  
-        
-#        ss.dll.bufferSep.connect(ss.dll.crc)  
         
         ss.dll.subFUN.connects.pop(0)
         ss.dll.group.bottom = "buffer"
