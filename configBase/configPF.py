@@ -70,7 +70,7 @@ class Config(Frozen):
     noIPHeader = True #Set to true to set IP header to 0
     probeWindowSize = 0.01 # Probe per frame
 
-    schedStrategy = "RR" # "PF" ProportionalFair (PF) or RoundRobin (RR)
+    schedStrategy = "PF" # "PF" ProportionalFair (PF) or RoundRobin (RR)
 
     nSectors = 1
     nCircles = 0

@@ -1,0 +1,82 @@
+
+#############################################
+## Frame configuration      [symbols]      ##
+#############################################
+
+   Frame:
+   ~~~~~~~ 
+   frameHead = 3
+   dlMap = 2.0
+   ulMap = 2.0
+   dlData = 355.0
+   ranging = 16
+   bwReq = 10
+   subframe = 0
+   ulData = 328.0
+   _________________________
+   FrameDuration      : 716.0
+   FrameDuration total: 716.0
+#############################################
+## Frame configuration      [milli seconds]      ##
+#############################################
+
+   Frame:
+   ~~~~~~~ 
+   frameHeadLength = 0.0416666666667
+   dlMapLength = 0.0277777777778
+   ulMapLength = 0.0277777777778
+   dlDataLength = 4.93055555556
+   rangingLength = 0.222222222222
+   bwReqLength = 0.138888888889
+   subframeLength = 0.0
+   ulDataLength = 4.55555555556
+   _________________________
+   FrameDuration      : 10.0
+   FrameDuration total: 9.94444444444
+
+   TTG: 0.0277777777778
+   RTG: 0.0277777777778
+
+#############################################
+## subframe configuration      [symbols]   ##
+#############################################
+
+
+
+   SubFrame:
+   ~~~~~~~~~~ 
+   subPrePause = 0
+   subFrameHead = 0
+   subDlMap = 0
+   subUlMap = 0
+   subDlData = 0
+   subUlData = 0
+   subRanging = 0
+   subBwReq = 0
+   subPostPause = 0
+   ____________________________
+   SubFrameDuration      : 0
+   SubFrameDuration total: 0
+
+#############################################
+## subframe configuration      [milli seconds]   ##
+#############################################
+
+
+
+   SubFrame:
+   ~~~~~~~~~~ 
+   subPrePauseLength = 0
+   subFrameHeadLength = 0.0
+   subDlMapLength = 0.0
+   subUlMapLength = 0.0
+   subDlDataLength = 0.0
+   subUlDataLength = 0.0
+   subRangingLength = 0.0
+   subBwReqLength = 0.0
+   subPostPauseLength = 0
+   ____________________________
+   SubFrameDuration      : 0.0
+   SubFrameDuration total: 0.0
+
+   TTG: 0.0277777777778

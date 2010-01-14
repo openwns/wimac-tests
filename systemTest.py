@@ -19,10 +19,10 @@ testSuite = pywns.WNSUnit.TestSuite()
 
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- Base Test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-testSuite1 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+testSuite0 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
                                            configFile = 'config.py',
-                                           shortDescription = 'Two stations. One neer one far',
+                                           shortDescription = 'Two stations. One neer one far. RoundRobin',
                                            requireReferenceOutput = True,
                                            disabled = False,
                                            disabledReason = "",
@@ -43,6 +43,17 @@ testSuite1 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
 
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- Base Test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+testSuite1 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'configPF.py',
+                                           shortDescription = 'Two stations. One neer one far. ProportionalFair',
+                                           requireReferenceOutput = True,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configBase')
+
+##################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- TDMA Test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 testSuite2 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
                                            configFile = 'config.py',
@@ -113,6 +124,7 @@ testSuite6 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            disabledReason = "",
                                            workingDir = 'configBypass')
 
+testSuite.addTest(testSuite0)
 testSuite.addTest(testSuite1)
 testSuite.addTest(testSuite2)
 testSuite.addTest(testSuite3)
