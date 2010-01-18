@@ -1,8 +1,8 @@
         WNS
        =====
                  Status: Simulation is still running
-                     Start: Thu Jan 14 19:04:09 2010
-                       Now: Thu Jan 14 19:04:15 2010
+                     Start: Mon Jan 18 13:27:32 2010
+                       Now: Mon Jan 18 13:27:38 2010
                   Duration:             0:00:06
 
               Simulation time: 0
@@ -19,26 +19,26 @@ The following output is read from /proc/self/status
 ----------------------------------------------------------
 Name:	openwns
 State:	R (running)
-Tgid:	28800
-Pid:	28800
-PPid:	28799
+Tgid:	1332
+Pid:	1332
+PPid:	1331
 TracerPid:	0
-Uid:	2615	2615	2615	2615
-Gid:	1355	1355	1355	1355
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
 FDSize:	32
-Groups:	1000 1002 1278 1325 1332 1343 1355 7026 7031 
-VmPeak:	   99116 kB
-VmSize:	   99116 kB
+Groups:	4 20 24 25 29 30 44 46 107 109 115 124 1000 
+VmPeak:	   92808 kB
+VmSize:	   92808 kB
 VmLck:	       0 kB
-VmHWM:	   47472 kB
-VmRSS:	   47472 kB
-VmData:	   35212 kB
+VmHWM:	   47324 kB
+VmRSS:	   47324 kB
+VmData:	   34280 kB
 VmStk:	     232 kB
 VmExe:	      16 kB
-VmLib:	   61172 kB
-VmPTE:	     176 kB
+VmLib:	   55812 kB
+VmPTE:	      88 kB
 Threads:	3
-SigQ:	1/131072
+SigQ:	0/24566
 SigPnd:	0000000000000000
 ShdPnd:	0000000000000000
 SigBlk:	0000000000000000
@@ -47,10 +47,7 @@ SigCgt:	0000000180800422
 CapInh:	0000000000000000
 CapPrm:	0000000000000000
 CapEff:	0000000000000000
-CapBnd:	ffffffffffffffff
-Cpus_allowed:	00000000,000000ff
-Cpus_allowed_list:	0-7
+Cpus_allowed:	03
 Mems_allowed:	1
-Mems_allowed_list:	0
-voluntary_ctxt_switches:	302
-nonvoluntary_ctxt_switches:	279
+voluntary_ctxt_switches:	5
+nonvoluntary_ctxt_switches:	59

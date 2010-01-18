@@ -375,6 +375,7 @@ vdns = VirtualDNSServer("vDNS", "ip.DEFAULT.GLOBAL")
 WNS.simulationModel.nodes.append(vdns)
 
 WNS.simulationModel.nodes.append(vdhcp)
+WNS.environment.probeBusRegistry.removeMeasurementSource("wimac.schedulerQueue.delay")
 
 ### PostProcessor ###
 postProcessor = PostProcessor.WiMACPostProcessor()

@@ -145,5 +145,4 @@ if __name__ == '__main__':
     testRunner = pywns.WNSUnit.TextTestRunner()
 
     # Finally, run the tests.
-    for it in testSuite:
-       testRunner.run(it)
+    testRunner.run(testSuite)
