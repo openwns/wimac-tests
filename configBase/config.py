@@ -1,7 +1,5 @@
 import os
 import sys
-sys.path.append(os.path.join('.','commonConfig'))
-sys.path.append(os.path.join('..','commonConfig'))
 
 import rise
 import openwns.node
