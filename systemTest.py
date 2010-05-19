@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: iso-8859-1 -*-
 
 # this is needed, so that the script can be called from everywhere
 import os
@@ -103,19 +104,28 @@ testSuite4 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
 
 
 ##################################################################################
-#~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- OFDMA Test ~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- OFDMA Test 5MHz~~~~~~~~~~~~~~~~~~~~~~~~~
 testSuite5 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'config5MHz.py',
+                                           shortDescription = 'Using multiple subchannels',
+                                           requireReferenceOutput = False,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configOFDMA')
+
+#~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- OFDMA Test 20MHz~~~~~~~~~~~~~~~~~~~~~~~~~
+testSuite6 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
                                            configFile = 'config.py',
                                            shortDescription = 'Using multiple subchannels',
                                            requireReferenceOutput = False,
-                                           disabled = True,
-                                           disabledReason = "OFDMA needs to be enabled",
+                                           disabled = False,
+                                           disabledReason = "",
                                            workingDir = 'configOFDMA')
 
 
-
-testSuite6 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+testSuite7 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
                                            configFile = 'config.py',
                                            shortDescription = 'Same as basic test but with bypass queue',
@@ -131,7 +141,7 @@ testSuite.addTest(testSuite3)
 testSuite.addTest(testSuite4)
 testSuite.addTest(testSuite5)
 testSuite.addTest(testSuite6)
-
+testSuite.addTest(testSuite7)
 
 if __name__ == '__main__':
     # This is only evaluated if the script is called by hand

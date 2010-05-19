@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 import os
 import sys
 
@@ -21,10 +22,11 @@ from constanze.node import IPBinding, IPListenerBinding, Listener
 from openwns.pyconfig import Frozen
 from openwns.pyconfig import Sealed
 
-import wimac.support.Nodes
+import  wimac.support.Nodes
 import wimac.KeyBuilder as CIDKeyBuilder
 import wimac.evaluation.default
 
+#from wimac.support.Parameters16m import ParametersSystem, ParametersOFDMA, ParametersMAC, ParametersPropagation
 from wimac.support.Parameters16m import ParametersSystem, ParametersOFDMA, ParametersMAC, ParametersPropagation
 from wimac.support.scenarioSupport import setupRelayScenario
 from wimac.support.scenarioSupport import calculateScenarioRadius, numberOfAccessPointsForHexagonalScenario
@@ -42,10 +44,11 @@ associations = {}
 class Config(Frozen):
     # Set basic WiMAX Parameters
     parametersSystem      = ParametersSystem
-    parametersPhy         = ParametersOFDMA(_bandwidth=20) #[MHz]
+    parametersPhy         = ParametersOFDMA(_bandwidth=5) #[MHz]
     parametersMAC         = ParametersMAC
     parametersPropagation = ParametersPropagation
 
+    print "+++ subchannels: ", parametersPhy.subchannels, " subcarrierPerSubchannel: ", parametersPhy.subcarrierPerSubchannel, " minimumBitsPerSymbol: ", parametersPhy.minimumBitsPerSymbol, " dataSubCarrier: ", parametersPhy.dataSubCarrier
     parametersPhy.slotDuration = 6 *  parametersPhy.symbolDuration
     numberOfTimeSlots = 8 * parametersPhy.DL2ULratio
 
@@ -63,7 +66,7 @@ class Config(Frozen):
     eirpLimited = False
     positionErrorVariance = 0.0
 
-    packetSize = 2400.0 
+    packetSize = 240.0*8 # Max 240 if noIPHeader = True, else 80
     trafficUL = 5E7 # bit/s per station
     trafficDL = 5E7 # bit/s per station
     noIPHeader = True #Set to true to set IP header to 0
@@ -101,7 +104,7 @@ WNS.maxSimTime = 0.07999 # seconds
 # Logger settings
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = True
-WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
+WNS.outputStrategy = openwns.simulator.OutputStrategy.MOVE
 
 # Probe settings
 WNS.statusWriteInterval = 30 # in seconds
@@ -134,7 +137,7 @@ WNS.modules.wimac.parametersPHY = Config.parametersPhy
 ### Instantiating Nodes and setting Traffic        #
 ####################################################
 # one RANG
-rang = wimac.support.Nodes.RANG()
+rang =  wimac.support.Nodes.RANG()
 rang.nl.logger.level = 1
                                         
 if Config.noIPHeader:
@@ -153,7 +156,7 @@ stationIDs = stationID()
 accessPoints = []
 
 for i in xrange(Config.nBSs):
-    bs = wimac.support.Nodes.BaseStation(stationIDs.next(), Config)
+    bs =  wimac.support.Nodes.BaseStation(stationIDs.next(), Config)
     
     bs.dll.topTpProbe.config.windowSize = Config.probeWindowSize
     bs.dll.topTpProbe.config.sampleInterval = Config.probeWindowSize
@@ -178,7 +181,7 @@ userTerminals = []
 k = 0
 for bs in accessPoints:
     for i in xrange(Config.nSSs):
-        ss = wimac.support.Nodes.SubscriberStation(stationIDs.next(), Config)
+        ss =  wimac.support.Nodes.SubscriberStation(stationIDs.next(), Config)
         
         ss.dll.topTpProbe.config.windowSize = Config.probeWindowSize
         ss.dll.topTpProbe.config.sampleInterval = Config.probeWindowSize
@@ -256,7 +259,7 @@ userTerminals[0].mobility.mobility.setCoords(bsPos + openwns.geometry.position.P
 print "BSPos:" + str(bsPos)
 print "UT1Pos:" + str(userTerminals[0].mobility.mobility.getCoords())
 if Config.nSSs == 2:
-	userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(1700,0,0))
+	userTerminals[1].mobility.mobility.setCoords(bsPos + openwns.geometry.position.Position(500,0,0))
 	print "UT2Pos:" + str(userTerminals[1].mobility.mobility.getCoords())
 
 # Here we specify the stations we want to probe.
