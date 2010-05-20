@@ -40,7 +40,10 @@ class Config(Frozen):
     parametersMAC         = ParametersMAC
     
     parametersPhy.slotDuration = 6 *  parametersPhy.symbolDuration
-    numberOfTimeSlots = 8 * parametersPhy.DL2ULratio
+    
+    # 3 * 6 = 18 symbols UD and 18 DL, total of 36 symbols. Other 47 - 36 = 11 symbols
+    # are for PYH, control, and management traffic
+    numberOfTimeSlots = 3  
 
     packetSize = 2400.0 
     trafficUL = 5E5 # bit/s per station
@@ -76,7 +79,7 @@ bsCreator = wimac.support.nodecreators.WiMAXBSCreator(stationIDs, Config)
 ueCreator = wimac.support.nodecreators.WiMAXUECreator(stationIDs, Config)
 scenarios.builders.CreatorPlacerBuilder(bsCreator, bsPlacer, bsAntenna, ueCreator, uePlacer)
 
-wimac.support.helper.setupPhy(WNS, "LoS_Test")
+wimac.support.helper.setupPhy(WNS, Config, "LoS_Test")
 
 # Set the scheduler
 wimac.support.helper.setupScheduler(WNS, Config.scheduler)

@@ -76,7 +76,7 @@ bsCreator = wimac.support.nodecreators.WiMAXBSCreator(stationIDs, Config)
 ueCreator = wimac.support.nodecreators.WiMAXUECreator(stationIDs, Config)
 scenarios.builders.CreatorPlacerBuilder(bsCreator, bsPlacer, bsAntenna, ueCreator, uePlacer)
 
-wimac.support.helper.setupPhy(WNS, "LoS_Test")
+wimac.support.helper.setupPhy(WNS, Config, "LoS_Test")
 
 # Set the scheduler
 wimac.support.helper.setupScheduler(WNS, Config.scheduler)
