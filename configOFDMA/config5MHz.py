@@ -100,8 +100,8 @@ if Config.trafficDL > 0.0:
 wimac.support.helper.setL2ProbeWindowSize(WNS, Config.probeWindowSize)
 
 # Currently we assume one BS and associate all UTs to it
-utNodes = WNS.simulationModel.getNodesByType("UE")
-bsNodes = WNS.simulationModel.getNodesByType("BS")
+utNodes = WNS.simulationModel.getNodesByProperty("Type", "UE")
+bsNodes = WNS.simulationModel.getNodesByProperty("Type", "BS")
 assert len(bsNodes) == 1, "Currently only one BS supported"
 for ut in utNodes:
     ut.dll.associate(bsNodes[0].dll)
