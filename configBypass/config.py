@@ -67,7 +67,6 @@ WNS.modules.rise.debug.antennas = True
                 
 # Create and place the nodes:
 # One BS (25m omnidirectional antenna height) with two nodes, one near, one far
-# Currently numberOfCircles must be 0
 
 bsPlacer = scenarios.placer.HexagonalPlacer(numberOfCircles = 0, interSiteDistance = 100.0, rotate=0.0)
 uePlacer = scenarios.placer.LinearPlacer(numberOfNodes = 2, positionsList = [10, 1700])
@@ -96,40 +95,36 @@ if Config.trafficDL > 0.0:
 # Configure the window probes
 wimac.support.helper.setL2ProbeWindowSize(WNS, Config.probeWindowSize)
 
-# Currently we assume one BS and associate all UTs to it
 utNodes = WNS.simulationModel.getNodesByProperty("Type", "UE")
 bsNodes = WNS.simulationModel.getNodesByProperty("Type", "BS")
-assert len(bsNodes) == 1, "Currently only one BS supported"
-for ut in utNodes:
-    ut.dll.associate(bsNodes[0].dll)
-
 
 ##################################################################################################
 # Configure the scheduler to use the BypassQueue
-bs = bsNodes[0]
-# Use the Bypass Queue
-# DL Master
-bs.dll.dlscheduler.config.txScheduler.queue = wimac.Scheduler.BypassQueue()
-bs.dll.dlscheduler.config.txScheduler.alwaysAcceptIfQueueAccepts = True
-
-# Use the Simple Queue
-# UL Master
-bs.dll.ulscheduler.config.rxScheduler.queue = openwns.Scheduler.SimpleQueue()
-bs.dll.ulscheduler.config.rxScheduler.alwaysAcceptIfQueueAccepts = True        
-
-# Pop the Reassembly FU
-bs.dll.subFUN.connects.pop(0)
-bs.dll.group.bottom = "buffer"
-
-# We need PseudeBWRequests with the Bypass Queue
-bs.dll.ulscheduler.config.rxScheduler.pseudoGenerator = wimac.Scheduler.PseudoBWRequestGenerator(
-            'connectionManager',
-            'ulscheduler',
-            _packetSize = Config.packetSize,
-            _pduOverhead = Config.parametersMAC.pduOverhead)
-
-if Config.noIPHeader:
-    bs.dll.ulscheduler.config.rxScheduler.pseudoGenerator.pduOverhead -= 160
+for bs in bsNodes:
+    
+    # Use the Bypass Queue
+    # DL Master
+    bs.dll.dlscheduler.config.txScheduler.queue = wimac.Scheduler.BypassQueue()
+    bs.dll.dlscheduler.config.txScheduler.alwaysAcceptIfQueueAccepts = True
+    
+    # Use the Simple Queue
+    # UL Master
+    bs.dll.ulscheduler.config.rxScheduler.queue = openwns.Scheduler.SimpleQueue()
+    bs.dll.ulscheduler.config.rxScheduler.alwaysAcceptIfQueueAccepts = True        
+    
+    # Pop the Reassembly FU
+    bs.dll.subFUN.connects.pop(0)
+    bs.dll.group.bottom = "buffer"
+    
+    # We need PseudeBWRequests with the Bypass Queue
+    bs.dll.ulscheduler.config.rxScheduler.pseudoGenerator = wimac.Scheduler.PseudoBWRequestGenerator(
+                'connectionManager',
+                'ulscheduler',
+                _packetSize = Config.packetSize,
+                _pduOverhead = Config.parametersMAC.pduOverhead)
+    
+    if Config.noIPHeader:
+        bs.dll.ulscheduler.config.rxScheduler.pseudoGenerator.pduOverhead -= 160
 
 for ss in utNodes:
     # Use the Bypass Queue
