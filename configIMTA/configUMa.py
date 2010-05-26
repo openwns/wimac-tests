@@ -36,18 +36,21 @@ associations = {}
 ####################################################
 class Config(Frozen):
     # Set basic WiMAX Parameters
-    parametersPhy         = ParametersOFDMA(_bandwidth=5)
+    parametersPhy         = ParametersOFDMA(5)
     parametersMAC         = ParametersMAC
+    
     
     parametersPhy.slotDuration = 6 *  parametersPhy.symbolDuration
     
     # 3 * 6 = 18 symbols UD and 18 DL, total of 36 symbols. Other 47 - 36 = 11 symbols
     # are for PYH, control, and management traffic
-    numberOfTimeSlots = 3  
+    numberOfTimeSlots = 3
 
     packetSize = 2400.0 
-    trafficUL = 5E5 # bit/s per station
-    trafficDL = 5E5 # bit/s per station
+    
+    # Only generate one initial UL packet per UT
+    trafficUL = 0.0 # bit/s per station
+    trafficDL = 0.0 # bit/s per station
     
     noIPHeader = True #Set to true to set IP header to 0
     probeWindowSize = 0.01 # Probe per frame
@@ -56,7 +59,7 @@ class Config(Frozen):
 # General Setup
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
 openwns.setSimulator(WNS)
-WNS.maxSimTime = 0.07999 # seconds
+WNS.maxSimTime = 0.0201 # seconds
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = True
 WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
@@ -68,17 +71,17 @@ WNS.modules.wimac.parametersPHY = Config.parametersPhy
                 
 WNS.modules.rise.debug.antennas = True                
                 
-# Create and place the nodes:
-# One BS (25m omnidirectional antenna height) with two nodes, one near, one far
-
-bsPlacer = scenarios.placer.HexagonalPlacer(numberOfCircles = 0, interSiteDistance = 100.0, rotate=0.0)
-uePlacer = scenarios.placer.LinearPlacer(numberOfNodes = 2, positionsList = [10, 1700])
-bsAntenna = scenarios.antenna.IsotropicAntennaCreator([0.0, 0.0, 5.0])
 bsCreator = wimac.support.nodecreators.WiMAXBSCreator(stationIDs, Config)
 ueCreator = wimac.support.nodecreators.WiMAXUECreator(stationIDs, Config)
-scenarios.builders.CreatorPlacerBuilder(bsCreator, bsPlacer, bsAntenna, ueCreator, uePlacer)
 
-wimac.support.helper.setupPhy(WNS, Config, "LoS_Test")
+scenario = scenarios.builders.CreatorPlacerBuilderUrbanMacro(
+    bsCreator, 
+    ueCreator, 
+    sectorization = True, 
+    numberOfCircles = 0, 
+    numberOfNodes = 30)
+
+wimac.support.helper.setupPhy(WNS, Config, "UMa")
 
 # Set the scheduler
 wimac.support.helper.setupScheduler(WNS, Config.scheduler)
@@ -106,14 +109,9 @@ ip.BackboneHelpers.createIPInfrastructure(WNS, "WIMAXRAN")
 # Probe configuration
 loggingStationIDs = []
 
-for node in utNodes:
+for node in utNodes:    
     loggingStationIDs.append(node.dll.stationID)
 
 wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
-
-wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, 
-                                                          Config.parametersPhy.symbolsFrame, 
-                                                          [1], 
-                                                          loggingStationIDs)
 
 openwns.evaluation.default.installEvaluation(WNS)

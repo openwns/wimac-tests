@@ -36,7 +36,7 @@ associations = {}
 ####################################################
 class Config(Frozen):
     # Set basic WiMAX Parameters
-    parametersPhy         = ParametersOFDMA(_bandwidth=20)
+    parametersPhy         = ParametersOFDMA(_bandwidth = 5)
     parametersMAC         = ParametersMAC
     
     parametersPhy.slotDuration = 6 *  parametersPhy.symbolDuration

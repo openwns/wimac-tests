@@ -47,22 +47,12 @@ testSuite3 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            shortDescription = 'Using multiple subchannels',
                                            requireReferenceOutput = False,
                                            disabled = False,
-                                           disabledReason = "OFDMA needs to be enabled",
+                                           disabledReason = "",
                                            workingDir = 'configOFDMA')
-
-testSuite4 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
-                                           
-                                           configFile = 'config5MHz.py',
-                                           shortDescription = 'Using multiple subchannels',
-                                           requireReferenceOutput = False,
-                                           disabled = False,
-                                           disabledReason = "OFDMA needs to be enabled",
-                                           workingDir = 'configOFDMA')
-
 
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- BypassQueue Test ~~~~~~~~~~~~~~~~~~~~~~~~~
-testSuite5 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+testSuite4 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
                                            configFile = 'config.py',
                                            shortDescription = 'Same as basic test but with bypass queue',
@@ -70,6 +60,18 @@ testSuite5 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            disabled = False,
                                            disabledReason = "",
                                            workingDir = 'configBypass')
+
+##################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- IMT-Advanced Tests ~~~~~~~~~~~~~~~~~~~~~~~~~
+testSuite5 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'configUMa.py',
+                                           shortDescription = "IMT-A Urban Macro Scenario with 5MHz BW in 3 sectors.",
+                                           requireReferenceOutput = False,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configIMTA')
+
 
 testSuite.addTest(testSuite1)
 testSuite.addTest(testSuite2)
