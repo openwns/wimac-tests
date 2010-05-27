@@ -67,7 +67,6 @@ WNS.modules.rise.debug.antennas = True
                 
 # Create and place the nodes:
 # One BS (25m omnidirectional antenna height) with two nodes, one near, one far
-# Currently numberOfCircles must be 0
 
 bsPlacer = scenarios.placer.HexagonalPlacer(numberOfCircles = 0, interSiteDistance = 100.0, rotate=0.0)
 uePlacer = scenarios.placer.LinearPlacer(numberOfNodes = 2, positionsList = [10, 1700])
@@ -96,23 +95,21 @@ if Config.trafficDL > 0.0:
 # Configure the window probes
 wimac.support.helper.setL2ProbeWindowSize(WNS, Config.probeWindowSize)
 
-# Currently we assume one BS and associate all UTs to it
-utNodes = WNS.simulationModel.getNodesByType("UE")
-bsNodes = WNS.simulationModel.getNodesByType("BS")
-assert len(bsNodes) == 1, "Currently only one BS supported"
-for ut in utNodes:
-    ut.dll.associate(bsNodes[0].dll)
 
 # DHCP, ARP, DNS for IP
 ip.BackboneHelpers.createIPInfrastructure(WNS, "WIMAXRAN")
 
+utNodes = WNS.simulationModel.getNodesByProperty("Type", "UE")
+bsNodes = WNS.simulationModel.getNodesByProperty("Type", "BS")
+
+
 # Probe configuration
 loggingStationIDs = []
 
-for node in utNodes:    
+for node in utNodes + bsNodes:    
     loggingStationIDs.append(node.dll.stationID)
 
-wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs)
+wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
 
 wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, 
                                                           Config.parametersPhy.symbolsFrame, 
