@@ -72,13 +72,42 @@ testSuite5 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            disabledReason = "",
                                            workingDir = 'configIMTA')
 
+testSuite6 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'configUMi.py',
+                                           shortDescription = "IMT-A Urban Micro Scenario with 5MHz BW in 3 sectors.",
+                                           requireReferenceOutput = False,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configIMTA')
+
+testSuite7 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'configRMa.py',
+                                           shortDescription = "IMT-A Rural Micro Scenario with 5MHz BW in 3 sectors.",
+                                           requireReferenceOutput = False,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configIMTA')
+
+testSuite8 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'configSMa.py',
+                                           shortDescription = "IMT-A Suburban Macro Scenario with 5MHz BW in 3 sectors.",
+                                           requireReferenceOutput = False,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configIMTA')
+
 
 testSuite.addTest(testSuite1)
 testSuite.addTest(testSuite2)
 testSuite.addTest(testSuite3)
 testSuite.addTest(testSuite4)
 testSuite.addTest(testSuite5)
-
+testSuite.addTest(testSuite6)
+testSuite.addTest(testSuite7)
+testSuite.addTest(testSuite8)
 
 if __name__ == '__main__':
     # This is only evaluated if the script is called by hand
