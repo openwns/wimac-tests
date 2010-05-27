@@ -46,7 +46,7 @@ class Config(Frozen):
     # are for PYH, control, and management traffic
     numberOfTimeSlots = 3
 
-    packetSize = 2400.0 
+    packetSize = 100.0 
     
     # Only generate one initial UL packet per UT
     trafficUL = 0.0 # bit/s per station
@@ -59,7 +59,7 @@ class Config(Frozen):
 # General Setup
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
 openwns.setSimulator(WNS)
-WNS.maxSimTime = 0.0201 # seconds
+WNS.maxSimTime = 0.021 # seconds
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = True
 WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
@@ -79,7 +79,7 @@ scenario = scenarios.builders.CreatorPlacerBuilderUrbanMacro(
     ueCreator, 
     sectorization = True, 
     numberOfCircles = 0, 
-    numberOfNodes = 30)
+    numberOfNodes = 6)
 
 wimac.support.helper.setupPhy(WNS, Config, "UMa")
 
@@ -113,5 +113,8 @@ for node in utNodes:
     loggingStationIDs.append(node.dll.stationID)
 
 wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
+
+# There is currently a difference between opt and dbg, this will be fixed
+WNS.environment.probeBusRegistry.removeMeasurementSource("wimac.cirSDMA")
 
 openwns.evaluation.default.installEvaluation(WNS)
