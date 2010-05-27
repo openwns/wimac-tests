@@ -1,0 +1,29 @@
+#  PROBE RESULTS (THIS IS A MAGIC LINE)
+# ---------------------------------------------------------------------------
+# Evaluation: Moments
+# ---------------------------------------------------------------------------
+#  Name: y over OffsetFromFrameStart
+#  Description: y over OffsetFromFrameStart
+# ---------------------------------------------------------------------------
+#  Evaluation terminated successfully!
+# ---------------------------------------------------------------------------
+#  Common Statistics 
+#  Minimum: 7.2049938
+#  Maximum: 59.6924825
+#  Trials: 153
+#  Mean: 29.8466556
+# 
+#  Variance: 680.2049018
+#  Relative variance: 0.7635692
+#  Coefficient of variation: 0.8738245
+#  Standard deviation: 26.0807381
+#  Relative standard deviation: 0.8738245
+# 
+#  Skewness: 0.2744201
+# 
+#  2nd moment: 1566.5819679
+#  3rd moment: 91963.8120296
+# 
+#  Sum of all values: 4566.5383051
+#  (Sum of all values)^2: 239687.0410954
+#  (Sum of all values)^3: 14070463.2405228

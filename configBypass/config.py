@@ -144,10 +144,10 @@ ip.BackboneHelpers.createIPInfrastructure(WNS, "WIMAXRAN")
 # Probe configuration
 loggingStationIDs = []
 
-for node in utNodes:    
+for node in utNodes + bsNodes:    
     loggingStationIDs.append(node.dll.stationID)
 
-wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs)
+wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
 
 wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, 
                                                           Config.parametersPhy.symbolsFrame, 

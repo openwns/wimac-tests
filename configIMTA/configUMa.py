@@ -101,20 +101,23 @@ if Config.trafficDL > 0.0:
 # Configure the window probes
 wimac.support.helper.setL2ProbeWindowSize(WNS, Config.probeWindowSize)
 
-utNodes = WNS.simulationModel.getNodesByProperty("Type", "UE")
-
 # DHCP, ARP, DNS for IP
 ip.BackboneHelpers.createIPInfrastructure(WNS, "WIMAXRAN")
+
+utNodes = WNS.simulationModel.getNodesByProperty("Type", "UE")
+bsNodes = WNS.simulationModel.getNodesByProperty("Type", "BS")
 
 # Probe configuration
 loggingStationIDs = []
 
-for node in utNodes:    
+for node in utNodes + bsNodes:    
     loggingStationIDs.append(node.dll.stationID)
 
 wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
 
 # There is currently a difference between opt and dbg, this will be fixed
 WNS.environment.probeBusRegistry.removeMeasurementSource("wimac.cirSDMA")
+WNS.environment.probeBusRegistry.removeMeasurementSource("wimac.carrierSDMA")
+WNS.environment.probeBusRegistry.removeMeasurementSource("wimac.interferenceSDMA")
 
 openwns.evaluation.default.installEvaluation(WNS)
