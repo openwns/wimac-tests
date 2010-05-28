@@ -99,6 +99,15 @@ testSuite8 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            disabledReason = "",
                                            workingDir = 'configIMTA')
 
+testSuite8 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'configInH.py',
+                                           shortDescription = "IMT-A Indoor Hotspot Scenario with 5MHz BW in 3 sectors.",
+                                           requireReferenceOutput = False,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configIMTA')
+
 
 testSuite.addTest(testSuite1)
 testSuite.addTest(testSuite2)
