@@ -99,7 +99,7 @@ testSuite8 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            disabledReason = "",
                                            workingDir = 'configIMTA')
 
-testSuite8 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+testSuite9 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
                                            
                                            configFile = 'configInH.py',
                                            shortDescription = "IMT-A Indoor Hotspot Scenario with 5MHz BW in 3 sectors.",
@@ -117,6 +117,7 @@ testSuite.addTest(testSuite5)
 testSuite.addTest(testSuite6)
 testSuite.addTest(testSuite7)
 testSuite.addTest(testSuite8)
+testSuite.addTest(testSuite9)
 
 if __name__ == '__main__':
     # This is only evaluated if the script is called by hand
