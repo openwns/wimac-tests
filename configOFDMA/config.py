@@ -72,7 +72,7 @@ WNS.modules.rise.debug.antennas = True
 # One BS (25m omnidirectional antenna height) with two nodes, one near, one far
 
 bsPlacer = scenarios.placer.HexagonalPlacer(numberOfCircles = 0, interSiteDistance = 100.0, rotate=0.0)
-uePlacer = scenarios.placer.LinearPlacer(numberOfNodes = 2, positionsList = [10, 1700])
+uePlacer = scenarios.placer.LinearPlacer(numberOfNodes = 2, positionsList = [10, 4000])
 bsAntenna = scenarios.antenna.IsotropicAntennaCreator([0.0, 0.0, 5.0])
 bsCreator = wimac.support.nodecreators.WiMAXBSCreator(stationIDs, Config)
 ueCreator = wimac.support.nodecreators.WiMAXUECreator(stationIDs, Config)
