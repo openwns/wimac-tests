@@ -11,19 +11,19 @@
 #  Minimum: 0.0016668
 #  Maximum: 0.0097068
 #  Trials: 14
-#  Mean: 0.0060139
+#  Mean: 0.0058326
 # 
-#  Variance: 0.0000045
-#  Relative variance: 0.1255956
-#  Coefficient of variation: 0.3543947
-#  Standard deviation: 0.0021313
-#  Relative standard deviation: 0.3543947
+#  Variance: 0.0000050
+#  Relative variance: 0.1468796
+#  Coefficient of variation: 0.3832488
+#  Standard deviation: 0.0022353
+#  Relative standard deviation: 0.3832488
 # 
-#  Skewness: -0.3263064
+#  Skewness: -0.1515337
 # 
-#  2nd moment: 0.0000404
+#  2nd moment: 0.0000387
 #  3rd moment: 0.0000003
 # 
-#  Sum of all values: 0.0841942
-#  (Sum of all values)^2: 0.0005654
-#  (Sum of all values)^3: 0.0000041
+#  Sum of all values: 0.0816561
+#  (Sum of all values)^2: 0.0005412
+#  (Sum of all values)^3: 0.0000039
