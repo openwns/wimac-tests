@@ -8,14 +8,14 @@
 #  Evaluation terminated successfully!
 # ---------------------------------------------------------------------------
 #  Common Statistics 
-#  Minimum: 0.0000208
+#  Minimum: 0.0000414
 #  Maximum: 0.0000417
-#  Trials: 153
-#  Mean: 0.0000409
+#  Trials: 273
+#  Mean: 0.0000415
 # 
 #  Variance: 0.0000000
-#  Relative variance: 0.0076309
-#  Coefficient of variation: 0.0873551
+#  Relative variance: 0.0000040
+#  Coefficient of variation: 0.0020031
 #  Standard deviation: 0.0000000
 #  Relative standard deviation: 0.0000000
 # 
@@ -24,6 +24,6 @@
 #  2nd moment: 0.0000000
 #  3rd moment: 0.0000000
 # 
-#  Sum of all values: 0.0062568
-#  (Sum of all values)^2: 0.0000003
+#  Sum of all values: 0.0113378
+#  (Sum of all values)^2: 0.0000005
 #  (Sum of all values)^3: 0.0000000

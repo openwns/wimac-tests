@@ -115,9 +115,4 @@ for node in utNodes + bsNodes:
 
 wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
 
-# There is currently a difference between opt and dbg, this will be fixed
-WNS.environment.probeBusRegistry.removeMeasurementSource("wimac.cirSDMA")
-WNS.environment.probeBusRegistry.removeMeasurementSource("wimac.carrierSDMA")
-WNS.environment.probeBusRegistry.removeMeasurementSource("wimac.interferenceSDMA")
-
 openwns.evaluation.default.installEvaluation(WNS)
