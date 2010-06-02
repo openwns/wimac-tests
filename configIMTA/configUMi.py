@@ -53,7 +53,7 @@ class Config(Frozen):
     trafficDL = 0.0 # bit/s per station
     
     noIPHeader = True #Set to true to set IP header to 0
-    probeWindowSize = 0.01 # Probe per frame
+    probeWindowSize = 0.005 # Probe per frame
     scheduler = "RoundRobin" # "PropFair"
 
 # General Setup
@@ -104,13 +104,12 @@ wimac.support.helper.setL2ProbeWindowSize(WNS, Config.probeWindowSize)
 # DHCP, ARP, DNS for IP
 ip.BackboneHelpers.createIPInfrastructure(WNS, "WIMAXRAN")
 
-utNodes = WNS.simulationModel.getNodesByProperty("Type", "UE")
-bsNodes = WNS.simulationModel.getNodesByProperty("Type", "BS")
+centerNodes = WNS.simulationModel.getNodesByProperty("isCenter", True)
 
 # Probe configuration
 loggingStationIDs = []
 
-for node in utNodes + bsNodes:    
+for node in centerNodes:    
     loggingStationIDs.append(node.dll.stationID)
 
 wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
