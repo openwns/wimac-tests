@@ -50,7 +50,7 @@ class Config(Frozen):
     trafficDL = 5E5 # bit/s per station
     
     noIPHeader = True #Set to true to set IP header to 0
-    probeWindowSize = 0.01 # Probe per frame
+    probeWindowSize = 0.005 # Probe per frame
     scheduler = "RoundRobin" # "PropFair"
 
 # General Setup
