@@ -49,6 +49,15 @@ testSuite3 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            disabled = False,
                                            disabledReason = "",
                                            workingDir = 'configOFDMA')
+##################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- SDMA Test ~~~~~~~~~~~~~~~~~~~~~~~~~
+testSuite10 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           configFile = 'configSDMA.py',
+                                           shortDescription = 'Using SDMA',
+                                           requireReferenceOutput = False,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configBeamforming')
 
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- BypassQueue Test ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -118,6 +127,7 @@ testSuite.addTest(testSuite6)
 testSuite.addTest(testSuite7)
 testSuite.addTest(testSuite8)
 testSuite.addTest(testSuite9)
+testSuite.addTest(testSuite10)
 
 if __name__ == '__main__':
     # This is only evaluated if the script is called by hand
