@@ -116,4 +116,9 @@ wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS,
                                                           [1], 
                                                           loggingStationIDs)
 
+# Enable probe showing when which user starts and stops transmitting.
+# Produces a lot of output and should only be used for short runs
+
+#wimac.evaluation.default.installScheduleEvaluation(WNS, loggingStationIDs)
+
 openwns.evaluation.default.installEvaluation(WNS)
