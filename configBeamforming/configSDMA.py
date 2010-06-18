@@ -82,7 +82,8 @@ uePlacer = scenarios.placer.PositionListPlacer(numberOfNodes = 3, positionsList 
 bsAntenna = scenarios.antenna.IsotropicAntennaCreator([0.0, 0.0, 1.5])
 bsCreator = wimac.support.nodecreators.WiMAXBSCreator(stationIDs, Config)
 ueCreator = wimac.support.nodecreators.WiMAXUECreator(stationIDs, Config)
-scenarios.builders.CreatorPlacerBuilder(bsCreator, bsPlacer, bsAntenna, ueCreator, uePlacer)
+channelmodelcreator = wimac.support.helper.TestChannelModelCreator()
+scenarios.builders.CreatorPlacerBuilder(bsCreator, bsPlacer, bsAntenna, ueCreator, uePlacer, channelmodelcreator)
 
 wimac.support.helper.setupPhy(WNS, Config, "LoS_Test")
 
