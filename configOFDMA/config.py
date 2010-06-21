@@ -113,4 +113,7 @@ for node in utNodes + bsNodes:
 
 wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
 
+# New Wrowser CouchDB feature available from Ubuntu Linux 10.04 on
+wimac.evaluation.default.installJSONScheduleEvaluation(WNS, loggingStationIDs)
+
 openwns.evaluation.default.installEvaluation(WNS)
