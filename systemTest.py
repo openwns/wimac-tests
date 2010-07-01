@@ -66,8 +66,8 @@ testSuite4 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            configFile = 'config.py',
                                            shortDescription = 'Same as basic test but with bypass queue',
                                            requireReferenceOutput = True,
-                                           disabled = False,
-                                           disabledReason = "",
+                                           disabled = True,
+                                           disabledReason = "Problem with multiple CIDs for QoS.",
                                            workingDir = 'configBypass')
 
 ##################################################################################
