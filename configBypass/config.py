@@ -150,10 +150,10 @@ for node in utNodes + bsNodes:
 
 wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
 
-wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, 
-                                                          Config.parametersPhy.symbolsFrame, 
-                                                          [1], 
-                                                          loggingStationIDs)
+#wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, 
+#                                                          Config.parametersPhy.symbolsFrame, 
+#                                                          [1], 
+#                                                          loggingStationIDs)
 
 # Not present with BypassQueue
 WNS.environment.probeBusRegistry.removeMeasurementSource("wimac.schedulerQueue.delay")

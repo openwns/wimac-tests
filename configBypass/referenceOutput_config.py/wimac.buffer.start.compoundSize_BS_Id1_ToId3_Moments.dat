@@ -10,7 +10,7 @@
 #  Common Statistics 
 #  Minimum: 86.0000000
 #  Maximum: 86.0000000
-#  Trials: 176
+#  Trials: 186
 #  Mean: 86.0000000
 # 
 #  Variance: 0.0000000
@@ -24,6 +24,6 @@
 #  2nd moment: 7396.0000000
 #  3rd moment: 636056.0000000
 # 
-#  Sum of all values: 15136.0000000
-#  (Sum of all values)^2: 1301696.0000000
-#  (Sum of all values)^3: 111945856.0000000
+#  Sum of all values: 15996.0000000
+#  (Sum of all values)^2: 1375656.0000000
+#  (Sum of all values)^3: 118306416.0000000

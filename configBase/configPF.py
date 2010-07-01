@@ -111,10 +111,10 @@ for node in utNodes + bsNodes:
 
 wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
 
-wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, 
-                                                          Config.parametersPhy.symbolsFrame, 
-                                                          [1], 
-                                                          loggingStationIDs)
+#wimac.evaluation.default.installOverFrameOffsetEvaluation(WNS, 
+#                                                          Config.parametersPhy.symbolsFrame, 
+#                                                          [1], 
+#                                                          loggingStationIDs)
 
 # Enable probe showing when which user starts and stops transmitting.
 # Produces a lot of output and should only be used for short runs
