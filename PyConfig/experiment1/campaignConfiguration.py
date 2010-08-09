@@ -29,24 +29,17 @@
 import sys
 import os
 
-# begin example "wimac.tutorial.experiment1.campaignConfiguration.import"
+# begin example "wimac.tutorial.experiment1.campaignConfiguration.imports"
 from openwns.wrowser.simdb.Parameters import Parameters, Bool, Int, Float, String
 # end example
 
 # begin example "wimac.tutorial.experiment1.campaignConfiguration.Set"
 class Set(Parameters):
     offeredTraffic = Float()
-    bandwidth = Int()
-    distance = Float()
-    def setDefault(self):
-        self.offeredTraffic = 10.01e6
-        self.bandwidth = 5
-        self.distance = 100
 # end example
 
 # begin example "wimac.tutorial.experiment1.campaignConfiguration.params"
 params = Set()
-params.setDefault()
 # end example
 
 # begin example "wimac.tutorial.experiment1.campaignConfiguration.offeredTraffic"
@@ -55,15 +48,7 @@ for rate in xrange(0,6):
     params.write()
 # end example
 
-# begin example "wimac.tutorial.experiment1.campaignConfiguration.bandwidth"
-for rate in [0,10,15,30,35]:
-    for params.bandwidth in [5,10,20]:
-        params.offeredTraffic = (0.001 + rate) * 1e6
-        params.write()
-# end example
 
-# begin example "wimac.tutorial.experiment1.campaignConfiguration.distance"
-#for dist in xrange(1,7):
-#    params.distance = dist * 2000
-#    params.write()
-# end example
+
+
+

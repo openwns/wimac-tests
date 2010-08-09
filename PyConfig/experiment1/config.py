@@ -53,7 +53,6 @@ import wimac.evaluation.default
 import wimac.support.PostProcessor as PostProcessor
 from wimac.support.Parameters16m import ParametersOFDMA, ParametersMAC
 
-from openwns.wrowser.simdb.SimConfig import params
 # end example
 
 # Global station id generator
@@ -68,9 +67,10 @@ stationIDs = stationID()
 associations = {}
 
 # begin example "wimac.tutorial.experiment1.config.simulationParameter"
+from openwns.wrowser.simdb.SimConfig import params
 offeredTraffic = params.offeredTraffic
-bandwidth = params.bandwidth
-distance = params.distance
+bandwidth = 5
+distance = 100
 
 ###  Distinguished Simulation Settings
 class Config(Frozen):
