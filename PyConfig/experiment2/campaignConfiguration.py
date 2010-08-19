@@ -48,7 +48,7 @@ params = Set()
 
 # begin example "wimac.tutorial.experiment2.campaignConfiguration.offeredTraffic"
 for params.scheduler in ["RoundRobin", "PropFair", "ExhaustiveRR", "Fixed"]:
-    for rate in xrange(0,9)
+    for rate in xrange(0,9):
         params.offeredTraffic = (0.1 + rate * 1.25) * 1e6
         params.write()
 # end example
