@@ -80,8 +80,9 @@ scenarios.builders.CreatorPlacerBuilder(bsCreator, bsPlacer, bsAntenna, ueCreato
 
 wimac.support.helper.setupPhy(WNS, Config, "LoS_Test")
 
-# Set the scheduler
+# begin example "wimac.tutorial.experiment2.staticFactory.substrategy.ProportionalFair.config.py"
 wimac.support.helper.setupScheduler(WNS, Config.scheduler)
+# end example
 
 # Set IP Header to 0 (else it is 20 byte)
 if Config.noIPHeader:
