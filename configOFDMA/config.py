@@ -115,10 +115,10 @@ wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments
 
 # New Wrowser CouchDB feature available from Ubuntu Linux 10.04 on
 
-#begin example "wimac.test.couchdb"
+# begin example "wimac.test.couchdb"
 
 wimac.evaluation.default.installJSONScheduleEvaluation(WNS, loggingStationIDs)
 
-#end example
+# end example
 
 openwns.evaluation.default.installEvaluation(WNS)
