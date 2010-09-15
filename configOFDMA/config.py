@@ -36,7 +36,7 @@ associations = {}
 ####################################################
 class Config(Frozen):
     # Set basic WiMAX Parameters
-    parametersPhy         = ParametersOFDMA(_bandwidth = 5)
+    parametersPhy         = ParametersOFDMA(bandwidth = 5)
     parametersMAC         = ParametersMAC
     
     parametersPhy.slotDuration = 6 *  parametersPhy.symbolDuration
@@ -52,6 +52,8 @@ class Config(Frozen):
     noIPHeader = True #Set to true to set IP header to 0
     probeWindowSize = 0.005 # Probe per frame
     scheduler = "RoundRobin" # "PropFair"
+    
+    settlingTime = 0.0
 
 # General Setup
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
@@ -111,7 +113,7 @@ loggingStationIDs = []
 for node in utNodes + bsNodes:    
     loggingStationIDs.append(node.dll.stationID)
 
-wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
+wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, Config.settlingTime, "Moments")
 
 # New Wrowser CouchDB feature available from Ubuntu Linux 10.04 on
 

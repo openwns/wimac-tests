@@ -118,7 +118,7 @@ testSuite9 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            workingDir = 'configIMTA')
 
 
-testSuite.addTest(testSuite1)
+testSuite.addTest(testSuite9)
 testSuite.addTest(testSuite2)
 testSuite.addTest(testSuite3)
 testSuite.addTest(testSuite4)
@@ -126,7 +126,7 @@ testSuite.addTest(testSuite5)
 testSuite.addTest(testSuite6)
 testSuite.addTest(testSuite7)
 testSuite.addTest(testSuite8)
-testSuite.addTest(testSuite9)
+testSuite.addTest(testSuite1)
 testSuite.addTest(testSuite10)
 
 if __name__ == '__main__':

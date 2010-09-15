@@ -1,0 +1,29 @@
+#  PROBE RESULTS (THIS IS A MAGIC LINE)
+# ---------------------------------------------------------------------------
+# Evaluation: Moments
+# ---------------------------------------------------------------------------
+#  Name: no name available
+#  Description: no description available
+# ---------------------------------------------------------------------------
+#  Evaluation terminated successfully!
+# ---------------------------------------------------------------------------
+#  Common Statistics 
+#  Minimum: 0.0000000
+#  Maximum: 15.0000000
+#  Trials: 282
+#  Mean: 4.4432624
+# 
+#  Variance: 45.3152747
+#  Relative variance: 2.2953065
+#  Coefficient of variation: 1.5150269
+#  Standard deviation: 6.7316621
+#  Relative standard deviation: 1.5150269
+# 
+#  Skewness: 0.9189776
+# 
+#  2nd moment: 64.8971631
+#  3rd moment: 969.9539007
+# 
+#  Sum of all values: 1253.0000000
+#  (Sum of all values)^2: 18301.0000000
+#  (Sum of all values)^3: 273527.0000000

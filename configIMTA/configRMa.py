@@ -55,6 +55,8 @@ class Config(Frozen):
     noIPHeader = True #Set to true to set IP header to 0
     probeWindowSize = 0.005 # Probe per frame
     scheduler = "RoundRobin" # "PropFair"
+    
+    settlingTime = 0.0
 
 # General Setup
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
@@ -112,6 +114,6 @@ loggingStationIDs = []
 for node in centerNodes:    
     loggingStationIDs.append(node.dll.stationID)
 
-wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, "Moments")
+wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, Config.settlingTime, "Moments")
 
 openwns.evaluation.default.installEvaluation(WNS)
