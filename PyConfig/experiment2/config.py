@@ -136,8 +136,8 @@ loggingStationIDs = []
 for node in utNodes + bsNodes:    
     loggingStationIDs.append(node.dll.stationID)
 
-# begin example "wimac.tutorial.experiment2.config.Probing"
-wimac.evaluation.default.installTutorialEvaluation(WNS, loggingStationIDs, Config.settlingTime, "PDF")
+# begin example "wimac.tutorial.experiment2.config.probing"
+wimac.evaluation.default.installTutorialEvaluation(WNS, loggingStationIDs, Config.settlingTime, "Moments")
 
 # New Wrowser CouchDB feature available from Ubuntu Linux 10.04 on
 #wimac.evaluation.default.installJSONScheduleEvaluation(WNS, loggingStationIDs)
