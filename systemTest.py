@@ -49,6 +49,15 @@ testSuite3 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            disabled = False,
                                            disabledReason = "",
                                            workingDir = 'configOFDMA')
+
+testSuite11 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'configMulticell.py',
+                                           shortDescription = 'Using multiple subchannels in 7 cells',
+                                           requireReferenceOutput = False,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configOFDMA')
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- SDMA Test ~~~~~~~~~~~~~~~~~~~~~~~~~
 testSuite10 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
@@ -128,6 +137,7 @@ testSuite.addTest(testSuite7)
 testSuite.addTest(testSuite8)
 testSuite.addTest(testSuite1)
 testSuite.addTest(testSuite10)
+testSuite.addTest(testSuite11)
 
 if __name__ == '__main__':
     # This is only evaluated if the script is called by hand

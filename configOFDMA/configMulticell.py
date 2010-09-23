@@ -45,9 +45,9 @@ class Config(Frozen):
     # are for PYH, control, and management traffic
     numberOfTimeSlots = 3 
 
-    packetSize = 2400.0 
-    trafficUL = 5E5 # bit/s per station
-    trafficDL = 5E5 # bit/s per station
+    packetSize = 1.0 
+    trafficUL = 0.0 # GENERATE EXACTLY ONE PACKET
+    trafficDL = 0.0 # bit/s per station
     
     noIPHeader = True #Set to true to set IP header to 0
     probeWindowSize = 0.005 # Probe per frame
@@ -58,7 +58,7 @@ class Config(Frozen):
 # General Setup
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
 openwns.setSimulator(WNS)
-WNS.maxSimTime = 0.07999 # seconds
+WNS.maxSimTime = 0.01501 # only three frames
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = True
 WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
@@ -70,17 +70,13 @@ WNS.modules.wimac.parametersPHY = Config.parametersPhy
                 
 WNS.modules.rise.debug.antennas = True                
                 
-# Create and place the nodes:
-# One BS (25m omnidirectional antenna height) with two nodes, one near, one far
-
-bsPlacer = scenarios.placer.HexagonalPlacer(numberOfCircles = 0, interSiteDistance = 100.0, rotate=0.0)
-uePlacer = scenarios.placer.LinearPlacer(numberOfNodes = 2, positionsList = [100, 400], rotate=0.3)
+bsPlacer = scenarios.placer.HexagonalPlacer(numberOfCircles = 1, interSiteDistance = 100.0, rotate=0.3)
+uePlacer = scenarios.placer.CircularPlacer(numberOfNodes = 3, radius = 50.0, rotate=0.3)
 bsAntenna = scenarios.antenna.IsotropicAntennaCreator([0.0, 0.0, 5.0])
 bsCreator = wimac.support.nodecreators.WiMAXBSCreator(stationIDs, Config)
 ueCreator = wimac.support.nodecreators.WiMAXUECreator(stationIDs, Config)
 channelmodelcreator = wimac.support.helper.TestChannelModelCreator()
-scenario = scenarios.builders.CreatorPlacerBuilder(bsCreator, bsPlacer, bsAntenna, 
-                                                   ueCreator, uePlacer, channelmodelcreator)
+scenario = scenarios.builders.CreatorPlacerBuilder(bsCreator, bsPlacer, bsAntenna, ueCreator, uePlacer, channelmodelcreator)
 
 wimac.support.helper.setupPhy(WNS, Config, "LoS_Test")
 
@@ -116,12 +112,6 @@ for node in utNodes + bsNodes:
 
 wimac.evaluation.default.installDebugEvaluation(WNS, loggingStationIDs, Config.settlingTime, "Moments")
 
-# New Wrowser CouchDB feature available from Ubuntu Linux 10.04 on
-
-# begin example "wimac.test.couchdb"
-
 wimac.evaluation.default.installJSONScheduleEvaluation(WNS, loggingStationIDs)
-
-# end example
 
 openwns.evaluation.default.installEvaluation(WNS)
