@@ -42,7 +42,7 @@ params = Set()
 # end example
 
 # begin example "wimac.tutorial.experiment1.campaignConfiguration.offeredTraffic"
-for rate in xrange(0,6):
+for rate in xrange(0,5):
     params.offeredTraffic = (0.01 + 2.5 * rate) * 1e6
     params.write()
 # end example
