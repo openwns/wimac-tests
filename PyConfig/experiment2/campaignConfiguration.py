@@ -42,12 +42,10 @@ class Set(Parameters):
 params = Set()
 #params.setDefault()
 
-#for params.subStrategy in ["ProportionalFair", "ExhaustiveRoundRobin", "DSADrivenRR", "RoundRobin"]:
-#for params.dsa in ["Fixed", "Random", "LinearFFirst"]:
-
 # begin example "wimac.tutorial.experiment2.campaignConfiguration.offeredTraffic"
 for params.scheduler in ["RoundRobin", "PropFair", "ExhaustiveRR", "Fixed"]:
     for rate in xrange(0,9):
-        params.offeredTraffic = (0.1 + rate * 1.25) * 1e6
-        params.write()
+        if rate != 1:
+            params.offeredTraffic = rate * 0.31 * 1e6
+            params.write()
 # end example

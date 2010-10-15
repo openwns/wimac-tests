@@ -68,10 +68,10 @@ associations = {}
 ###  Distinguished Simulation Settings
 class Config(Frozen):
     # Set basic WiMAX Parameters
-    parametersPhy         = ParametersOFDMA(bandwidth = 5)
+    parametersPhy         = ParametersOFDMA(bandwidth = 1.25)
     parametersMAC         = ParametersMAC
     
-    packetSize = 1200.0 
+    packetSize = 300.0 
     trafficUL = params.offeredTraffic / 2.0 # bit/s per station
     trafficDL = params.offeredTraffic / 2.0 # bit/s per station
     scheduler = params.scheduler
@@ -88,7 +88,7 @@ class Config(Frozen):
 
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
 openwns.setSimulator(WNS)
-WNS.maxSimTime = 1.10 # seconds
+WNS.maxSimTime = 1.1 # seconds
 WNS.masterLogger.backtrace.enabled = False
 WNS.masterLogger.enabled = True
 WNS.outputStrategy = openwns.simulator.OutputStrategy.DELETE
