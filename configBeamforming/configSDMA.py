@@ -53,7 +53,7 @@ class Config(Frozen):
     
     noIPHeader = True #Set to true to set IP header to 0
     probeWindowSize = 0.01 # Probe per frame
-    scheduler = "RoundRobin" # "PropFair"
+    scheduler = "Fixed"#"RoundRobin" # "PropFair"
 
 # General Setup
 WNS = openwns.Simulator(simulationModel = openwns.node.NodeSimulationModel())
