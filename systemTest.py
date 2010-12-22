@@ -126,6 +126,15 @@ testSuite9 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..
                                            disabledReason = "",
                                            workingDir = 'configIMTA')
 
+testSuite12 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
+                                           
+                                           configFile = 'config.py',
+                                           shortDescription = "InH like coexistence scenario.",
+                                           requireReferenceOutput = False,
+                                           disabled = False,
+                                           disabledReason = "",
+                                           workingDir = 'configFemto')
+
 
 testSuite.addTest(testSuite9)
 testSuite.addTest(testSuite2)
@@ -138,6 +147,8 @@ testSuite.addTest(testSuite8)
 testSuite.addTest(testSuite1)
 testSuite.addTest(testSuite10)
 testSuite.addTest(testSuite11)
+testSuite.addTest(testSuite12)
+
 
 if __name__ == '__main__':
     # This is only evaluated if the script is called by hand
