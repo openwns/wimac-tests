@@ -6,6 +6,7 @@ import scenarios
 import scenarios.builders
 import scenarios.placer
 import scenarios.antenna
+import scenarios.channelmodel
 
 import ip
 import ip.BackboneHelpers
@@ -82,7 +83,7 @@ uePlacer = scenarios.placer.PositionListPlacer(numberOfNodes = 3, positionsList 
 bsAntenna = scenarios.antenna.IsotropicAntennaCreator([0.0, 0.0, 1.5])
 bsCreator = wimac.support.nodecreators.WiMAXBSCreator(stationIDs, Config)
 ueCreator = wimac.support.nodecreators.WiMAXUECreator(stationIDs, Config)
-channelmodelcreator = wimac.support.helper.TestChannelModelCreator()
+channelmodelcreator = scenarios.channelmodel.TestChannelModelCreator()
 scenarios.builders.CreatorPlacerBuilder(bsCreator, bsPlacer, bsAntenna, ueCreator, uePlacer, channelmodelcreator)
 
 wimac.support.helper.setupPhy(WNS, Config, "LoS_Test")
