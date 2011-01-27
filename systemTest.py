@@ -61,7 +61,7 @@ testSuite11 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '.
 ##################################################################################
 #~~~~~~~~~~~~~~~~~~~~~~  TEST-SUITE -- SDMA Test ~~~~~~~~~~~~~~~~~~~~~~~~~
 testSuite10 = pywns.WNSUnit.ProbesTestSuite( sandboxPath = os.path.join('..', '..', '..', 'sandbox'),
-                                           configFile = 'configSDMA.py',
+                                           configFile = 'config.py',
                                            shortDescription = 'Using SDMA',
                                            requireReferenceOutput = False,
                                            disabled = False,
