@@ -16,7 +16,7 @@ import wimac.support.helper
 import wimac.evaluation.default
 import wimac.support.PostProcessor as PostProcessor
 
-from wimac.support.Parameters16m import ParametersOFDMA, ParametersMAC
+from wimac.support.Parameters16m import ParametersOFDMA, ParametersMAC, ParametersSystem
 
 import random
 random.seed(7)
@@ -37,18 +37,18 @@ associations = {}
 ####################################################
 class Config(Frozen):
     # Set basic WiMAX Parameters
-    parametersPhy         = ParametersOFDMA(bandwidth = 5)
-    parametersMAC         = ParametersMAC
+    parametersPhy    = ParametersOFDMA(bandwidth = 5)
+    parametersMAC    = ParametersMAC
     
     parametersPhy.slotDuration = 6 *  parametersPhy.symbolDuration
-    
+    centerFrequency = ParametersSystem.centerFrequency
     # 3 * 6 = 18 symbols UD and 18 DL, total of 36 symbols. Other 47 - 36 = 11 symbols
     # are for PYH, control, and management traffic
-    parametersPhy.maximalBeams = 4
+    parametersPhy.maximalBeams = 2
     parametersPhy.beamforming = True
     numberOfTimeSlots = 3 
 
-    packetSize = 2400.0 
+    packetSize = 800.0 
     trafficUL = 5E5 # bit/s per station
     trafficDL = 5E5 # bit/s per station
     
@@ -75,10 +75,10 @@ WNS.modules.rise.debug.antennas = True
 # One BS (25m omnidirectional antenna height) with two nodes, one near, one far
 
 bsPlacer = scenarios.placer.HexagonalPlacer(numberOfCircles = 0, interSiteDistance = 1000.0, rotate=0.0)
-uePlacer = scenarios.placer.PositionListPlacer(numberOfNodes = 3, positionsList = [
-                                                openwns.geometry.position.Position(x = 0.0, y = 10.0), 
-                                                openwns.geometry.position.Position(x = 10.0, y = 0.0),
-                                                openwns.geometry.position.Position(x = 0.0, y = 500.0)], 
+uePlacer = scenarios.placer.PositionListPlacer(numberOfNodes = 2, positionsList = [
+                                                openwns.geometry.position.Position(x = 2000.0, y = 0.0), 
+                                                openwns.geometry.position.Position(x = 0.0, y = 10.0)],
+                                                #openwns.geometry.position.Position(x = 0.0, y = 500.0)], 
                                                 rotate = 0.0)
 bsAntenna = scenarios.antenna.IsotropicAntennaCreator([0.0, 0.0, 1.5])
 bsCreator = wimac.support.nodecreators.WiMAXBSCreator(stationIDs, Config)

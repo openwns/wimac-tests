@@ -41,6 +41,7 @@ class Config(Frozen):
     parametersMAC         = ParametersMAC
     
     parametersPhy.slotDuration = 3.0 *  parametersPhy.symbolDuration
+    centerFrequency = 5470
     numberOfTimeSlots = 100
 
     packetSize = 600.0 

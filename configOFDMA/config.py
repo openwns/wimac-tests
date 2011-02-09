@@ -44,6 +44,7 @@ class Config(Frozen):
     
     # 3 * 6 = 18 symbols UD and 18 DL, total of 36 symbols. Other 47 - 36 = 11 symbols
     # are for PYH, control, and management traffic
+    centerFrequency = 5470
     numberOfTimeSlots = 3 
 
     packetSize = 2400.0 

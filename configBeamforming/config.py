@@ -16,8 +16,7 @@ import wimac.support.helper
 import wimac.evaluation.default
 import wimac.support.PostProcessor as PostProcessor
 
-from wimac.support.Parameters16m import ParametersOFDMA, ParametersMAC
-
+from wimac.support.Parameters16m import ParametersOFDMA, ParametersMAC, ParametersSystem
 import random
 random.seed(7)
 
@@ -39,13 +38,13 @@ class Config(Frozen):
     # Set basic WiMAX Parameters
     parametersPhy         = ParametersOFDMA(bandwidth = 5)
     parametersMAC         = ParametersMAC
-    
     parametersPhy.slotDuration = 6 *  parametersPhy.symbolDuration
     
     # 3 * 6 = 18 symbols UD and 18 DL, total of 36 symbols. Other 47 - 36 = 11 symbols
     # are for PYH, control, and management traffic
     parametersPhy.maximalBeams = 1
     parametersPhy.beamforming = True
+    centerFrequency = ParametersSystem.centerFrequency
     numberOfTimeSlots = 3 
 
     packetSize = 2400.0 
