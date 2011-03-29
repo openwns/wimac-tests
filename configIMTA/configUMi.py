@@ -3,7 +3,7 @@ from openwns.pyconfig import Frozen
 import openwns.evaluation.default
 
 import scenarios
-import scenarios.builders
+import scenarios.ituM2135
 import scenarios.placer
 import scenarios.antenna
 
@@ -77,7 +77,7 @@ WNS.modules.rise.debug.antennas = True
 bsCreator = wimac.support.nodecreators.WiMAXBSCreator(stationIDs, Config)
 ueCreator = wimac.support.nodecreators.WiMAXUECreator(stationIDs, Config)
 
-scenario = scenarios.builders.CreatorPlacerBuilderUrbanMicro(
+scenario = scenarios.ituM2135.CreatorPlacerBuilderUrbanMicro(
     bsCreator, 
     ueCreator, 
     sectorization = True, 
